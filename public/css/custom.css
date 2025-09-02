@@ -1,0 +1,33 @@
+ body {
+            font-family: system-ui, sans-serif;
+        }
+
+        .sidebar {
+            width: 250px;
+        }
+
+        .nav-item:hover {
+            background-color: #FF6600;
+        }
+        .nav-link.active {
+            background-color: #FF6600;
+        }
+         .avatar-circle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 18px;
+            color: white;
+            margin: 0 auto 10px;
+        }
+        .team-card {
+            transition: all 0.3s ease-in-out;
+        }
+        .team-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+        }
