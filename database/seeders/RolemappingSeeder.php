@@ -15,9 +15,7 @@ class RolemappingSeeder extends Seeder
     public function run()
     {
         RoleMapping::insert([
-        ['role_id' => 4,'permission_id' => 1
-        
-        0, 'created_at' => now(), 'updated_at' => now()],
+        ['role_id' => 4,'permission_id' => 10, 'created_at' => now(), 'updated_at' => now()],
         ['role_id' => 4,'permission_id' => 11, 'created_at' => now(), 'updated_at' => now()],
         ['role_id' => 4,'permission_id' => 12, 'created_at' => now(), 'updated_at' => now()],
         ['role_id' => 4,'permission_id' => 13, 'created_at' => now(), 'updated_at' => now()],
