@@ -24,7 +24,7 @@ class PermissionSeeder extends Seeder
         ['name' => 'add_users', 'created_at' => now(), 'updated_at' => now()],
         ['name' => 'edit_projects', 'created_at' => now(), 'updated_at' => now()],
         ['name' => 'delete_projects', 'created_at' => now(), 'updated_at' => now()],
-         ['name' => 'view_projects', 'created_at' => now(), 'updated_at' => now()],
+        ['name' => 'view_projects', 'created_at' => now(), 'updated_at' => now()],
         ['name' => 'view_tasks', 'created_at' => now(), 'updated_at' => now()],
         ['name' => 'add_tasks', 'created_at' => now(), 'updated_at' => now()],
         ['name' => 'edit_tasks', 'created_at' => now(), 'updated_at' => now()],
