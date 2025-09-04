@@ -6,6 +6,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\EmployeeController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperadminController;
 
 /*
@@ -21,10 +22,10 @@ use App\Http\Controllers\SuperadminController;
 
 // Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
 
-Route::get('/dashboard', function(){ 
-    return view('dashboard');
-})->name('dashboard')->middleware('auth');
 
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard')->middleware('auth');
 
 Route::get('/addemployee', [AuthController::class, 'showSignupForm'])->name('addemployee')->middleware(['auth','permission:add_users']);
 Route::post('/addemployeeform', [AuthController::class, 'signup'])->name('addemployeeform')->middleware(['auth','permission:add_users']);

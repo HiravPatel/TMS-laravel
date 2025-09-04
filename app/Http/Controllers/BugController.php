@@ -31,7 +31,7 @@ class BugController extends Controller
         });
     }
 
-    $bugs = $query->orderBy('id', 'desc')->paginate(2);
+    $bugs = $query->orderBy('id', 'desc')->paginate(4);
         return view('buglist', compact('bugs'));
     }
 
@@ -43,18 +43,28 @@ class BugController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'bug_name' => ['required',new OnlyAlpha],
-            'bug_desc' => ['required',new desc],
-            'task_id'  => 'required|exists:tasks,id',
-            'user_id'  => 'required|exists:users,id',
-            'priority' => 'required|string',
-            'status'   => 'required|string',
-        ]);
+    $request->validate([
+        'bug_name' => ['required', new OnlyAlpha],
+        'bug_desc' => ['required', new desc],
+        'task_id'  => 'required|exists:tasks,id',
+        'user_id'  => 'required|exists:users,id',
+        'priority' => 'required|string',
+        'status'   => 'required|string',
+        'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+    ]);
 
-        Bug::create($request->all());
+    $data = $request->all();
 
-        return redirect()->route('buglist')->with('success', 'Bug added successfully!');
+    if ($request->hasFile('image')) {
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads/bugs'), $imageName);
+        $data['image'] = 'uploads/bugs/' . $imageName;
+    }
+
+    Bug::create($data);
+
+    return redirect()->route('buglist')->with('success', 'Bug added successfully!');
+
     }
 
     public function getAssignedUser($taskId)
@@ -71,21 +81,35 @@ class BugController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
-        $request->validate([
-            'bug_name' => ['required',new OnlyAlpha],
-            'bug_desc' => ['required',new desc],
-            'task_id'  => 'required|exists:tasks,id',
-            'user_id'  => 'required|exists:users,id',
-            'priority' => 'required|in:High,Medium,Low',
-            'status'   => 'required|in:Todo,In Progress,Completed',
-        ]);
+{
+    $request->validate([
+        'bug_name' => ['required', new OnlyAlpha],
+        'bug_desc' => ['required', new desc],
+        'task_id'  => 'required|exists:tasks,id',
+        'user_id'  => 'required|exists:users,id',
+        'priority' => 'required|in:High,Medium,Low',
+        'status'   => 'required|in:Todo,In Progress,Completed',
+        'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
+    ]);
 
-        $bug = Bug::find($id);
-        $bug->update($request->all());
+    $bug = Bug::find($id);
+    $data = $request->all();
 
-        return redirect()->route('buglist')->with('success', 'Bug updated successfully.');
+    if ($request->hasFile('image')) {
+        if ($bug->image && file_exists(public_path($bug->image))) {
+            unlink(public_path($bug->image));
+        }
+
+        $imageName = time() . '.' . $request->image->extension();
+        $request->image->move(public_path('uploads/bugs'), $imageName);
+        $data['image'] = 'uploads/bugs/' . $imageName;
     }
+
+    $bug->update($data);
+
+    return redirect()->route('buglist')->with('success', 'Bug updated successfully.');
+}
+
 
     public function destroy($id)
     {

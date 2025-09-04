@@ -31,7 +31,7 @@ class TaskController extends Controller
         });
     }
 
-    $tasks = $query->orderBy('id', 'desc')->paginate(2);
+    $tasks = $query->orderBy('id', 'desc')->paginate(3);
 
         return view('tasklist', compact('tasks'));
     }

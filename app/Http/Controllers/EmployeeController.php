@@ -31,7 +31,7 @@ class EmployeeController extends Controller
         });
     }
 
-    $users = $query->orderBy('id')->paginate(3);
+    $users = $query->orderBy('id')->paginate(6);
 
         return view('employeelist',['activePage' => 'employeelist'], compact('users'));
 

@@ -16,7 +16,7 @@
             @endif
 
             <form method="POST" 
-                action="{{ isset($bug) ? route('updatebug', $bug->id) : route('storebugform') }}">
+                action="{{ isset($bug) ? route('updatebug', $bug->id) : route('storebugform') }}" enctype="multipart/form-data">
                 @csrf
                 @if(isset($bug))
                     @method('PUT')
@@ -107,6 +107,15 @@
                                 @enderror
                     </div>
                 </div>
+
+                <div class="mb-3">
+    <label for="image" class="form-label">Bug Image</label>
+    <input type="file" name="image" class="form-control">
+    @if(isset($bug) && $bug->image)
+        <img src="{{ asset($bug->image) }}" alt="Bug Image" class="mt-2" width="120">
+    @endif
+</div>
+
 
                 <div class="d-flex justify-content-end">
                     <a href="{{ route('buglist') }}" class="btn btn-secondary me-2">Cancel</a>

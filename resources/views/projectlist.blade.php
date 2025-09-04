@@ -34,11 +34,7 @@
                         </a>
                     </div>
                 </div>
-
-                @if (session('success'))
-                    <div class="alert alert-success">{{ session('success') }}</div>
-                @endif
-
+                
                 <div class="table-responsive">
                     <table class="table align-middle table-hover">
                         <thead class="table-success">
