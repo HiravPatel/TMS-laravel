@@ -9,6 +9,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <!-- jQuery (Toastr depends on jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
     <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
 </head>
 
@@ -62,6 +68,7 @@
             {{-- header --}}
             <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3 py-3">
     <div class="container-fluid d-flex justify-content-end">
+          {{-- <i class="fa fa-bell fa-2x me-4 text-secondary" aria-hidden="true"></i> --}}
         <div class="dropdown">
             <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="userDropdown"
                 data-bs-toggle="dropdown" aria-expanded="false">
@@ -100,5 +107,23 @@
     </div>
     {{-- sidebar --}}
 </body>
+    <script>
+        $(document).ready(function() {
+            @if(Session::has('success'))
+                toastr.success("{{ Session::get('success') }}");
+            @endif
 
+            @if(Session::has('error'))
+                toastr.error("{{ Session::get('error') }}");
+            @endif
+
+            @if(Session::has('warning'))
+                toastr.warning("{{ Session::get('warning') }}");
+            @endif
+
+            @if(Session::has('info'))
+                toastr.info("{{ Session::get('info') }}");
+            @endif
+        });
+    </script>
 </html>

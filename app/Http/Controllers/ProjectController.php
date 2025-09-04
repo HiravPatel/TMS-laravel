@@ -34,7 +34,7 @@ class ProjectController extends Controller
         });
     }
 
-    $projects = $query->orderBy('id', 'desc')->paginate(2);
+    $projects = $query->orderBy('id', 'desc')->paginate(5);
 
     return view('projectlist', compact('projects'));
     }
