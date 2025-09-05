@@ -28,15 +28,19 @@ class AuthController extends Controller
    public function signup(Request $request)
 {
     $request->validate([
-        'name'     => ['required',new OnlyAlpha],
-        'email'    => ['required','email','unique:users',new email],
-        'cno'      => ['required',new contact],
+        'name'     => ['required', new OnlyAlpha],
+        'email'    => ['required','email','unique:users', new email],
+        'cno'      => ['required', new contact],
         'role_id'  => 'required|exists:roles,id',
     ]);
 
-    $randomPassword = Str::random(8);
-
     $role = Role::find($request->role_id);
+
+    if (!$role) {
+        return back()->with('error', 'Invalid role selected.');
+    }
+
+    $randomPassword = Str::random(8);
 
     $user = User::create([
         'name'        => $request->name,
@@ -47,10 +51,14 @@ class AuthController extends Controller
         'first_login' => 1,
     ]);
 
-    Mail::to($user->email)->send(new send_password($user, $randomPassword, $role->role));
-
-    return redirect()->route('addemployee')->with('success', 'Member added successfully and credentials sent via email.');
+    if ($user) {
+        Mail::to($user->email)->send(new send_password($user, $randomPassword, $role->role));
+        return redirect()->route('addemployee')->with('success', 'Member added successfully and credentials sent via email.');
+    } else {
+        return back()->with('error', 'Failed to create user. Please try again.');
+    }
 }
+
 
 public function login(Request $request)
 {
@@ -121,9 +129,13 @@ public function sendOtp(Request $request)
 
     $user = User::where('email', $request->email)->first();
 
+    if (!$user) {
+        return back()->with('error', 'User not found.');
+    }
+
     $otp = rand(100000, 999999);
 
-     Send_otp::updateOrCreate(
+    $otpRecord = Send_otp::updateOrCreate(
         ['email' => $user->email],
         [
             'otp'        => $otp,
@@ -131,9 +143,12 @@ public function sendOtp(Request $request)
         ]
     );
 
-    Mail::to($user->email)->send(new SendOtpMail($user, $otp));
-
-    return redirect()->route('verifyOtpForm')->with('success', 'OTP sent to your email.');
+    if ($otpRecord) {
+        Mail::to($user->email)->send(new SendOtpMail($user, $otp));
+        return redirect()->route('verifyOtpForm')->with('success', 'OTP sent to your email.');
+    } else {
+        return back()->with('error', 'Failed to generate OTP. Please try again.');
+    }
 }
 public function showVerifyOtpForm()
 {
@@ -154,16 +169,21 @@ public function verifyOtp(Request $request)
         ->first();
 
     if (!$record) {
-        return back()->withErrors(['otp' => 'Invalid or expired OTP']);
+        return back()->with('error', 'Invalid or expired OTP.');
     }
 
     $user = User::where('email', $request->email)->first();
-    $user->password = bcrypt($request->password);
-    $user->save();
 
-    // Send_otp::where('email', $request->email)->delete();
+    if ($user) {
+        $user->password = bcrypt($request->password);
+        $user->save();
 
-    return redirect()->route('login')->with('success', 'Password reset successfully. Please login.');
+        // Send_otp::where('email', $request->email)->delete();
+
+        return redirect()->route('login')->with('success', 'Password reset successfully. Please login.');
+    } else {
+        return back()->with('error', 'User not found.');
+    }
 }
 
 }
