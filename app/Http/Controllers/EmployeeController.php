@@ -93,23 +93,31 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-        'name'    => 'required|string|max:50',
-        'email'   => 'required|email|unique:users,email,' . $id,
-        'cno'     => 'nullable|digits:10',
-        'role_id' => 'required|exists:roles,id',
-    ]);
+            'name'    => 'required|string|max:50',
+            'email'   => 'required|email|unique:users,email,' . $id,
+            'cno'     => 'nullable|digits:10',
+            'role_id' => 'required|exists:roles,id',
+        ]);
 
-    $user = User::find($id);
-    $user->update([
-        'name'    => $request->name,
-        'email'   => $request->email,
-        'cno'     => $request->cno,
-        'role_id' => $request->role_id,
-    ]);
+        $user = User::find($id);
 
-    return redirect()->route('employeelist')->with('success', 'Employee updated successfully.');
+        if (!$user) {
+            return redirect()->route('employeelist')->with('error', 'Employee not found.');
+        }
+
+        $updated = $user->update([
+            'name'    => $request->name,
+            'email'   => $request->email,
+            'cno'     => $request->cno,
+            'role_id' => $request->role_id,
+        ]);
+
+        if ($updated) {
+            return redirect()->route('employeelist')->with('success', 'Employee updated successfully.');
+        } else {
+            return redirect()->route('employeelist')->with('error', 'Failed to update employee. Please try again.');
+        }
     }
-
     /**
      * Remove the specified resource from storage.
      *
@@ -119,8 +127,15 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $user = User::find($id);
-        $user->delete();
 
-    return redirect()->route('employeelist')->with('success', 'Employee deleted successfully.');
+        if (!$user) {
+            return redirect()->route('employeelist')->with('error', 'Employee not found.');
+        }
+
+        if ($user->delete()) {
+            return redirect()->route('employeelist')->with('success', 'Employee deleted successfully.');
+        } else {
+            return redirect()->route('employeelist')->with('error', 'Failed to delete employee. Please try again.');
+        }
     }
 }

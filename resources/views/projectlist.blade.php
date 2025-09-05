@@ -50,7 +50,7 @@
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr>
-                                    <td>{{ $project->name }}</td>
+                                    <td>{{ $project->name }}-{{ $project->id }}</td>
                                     <td>{{ $project->leader->name }}</td>
                                     <td>
                                         <span

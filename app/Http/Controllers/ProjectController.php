@@ -15,30 +15,28 @@ class ProjectController extends Controller
     /**
      * Display a listing of the resource.
      */
- 
     public function index(Request $request)
     {
         $query = Project::with(['leader', 'members']);
 
-    if ($request->has('status') && $request->status != '') {
-        $query->where('status', $request->status);
+        if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
         }
 
         if ($request->has('search') && $request->search != '') {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('name', 'LIKE', "%{$search}%")
-              ->orWhereHas('leader', function ($q2) use ($search) {
-                  $q2->where('name', 'LIKE', "%{$search}%");
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('name', 'LIKE', "%{$search}%")
+                  ->orWhereHas('leader', function ($q2) use ($search) {
+                      $q2->where('name', 'LIKE', "%{$search}%");
+                  });
             });
-        });
+        }
+
+        $projects = $query->orderBy('id', 'desc')->paginate(5);
+
+        return view('projectlist', compact('projects'));
     }
-
-    $projects = $query->orderBy('id', 'desc')->paginate(5);
-
-    return view('projectlist', compact('projects'));
-    }
-
 
     /**
      * Show the form for creating a new resource.
@@ -46,7 +44,7 @@ class ProjectController extends Controller
     public function create()
     {
         $users = User::all();
-        return view('storeproject',['activePage' => 'storeproject'], compact('users'));
+        return view('storeproject', ['activePage' => 'storeproject'], compact('users'));
     }
 
     /**
@@ -55,8 +53,8 @@ class ProjectController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name'        => ['required',new title],
-            'description' => ['required',new desc],
+            'name'        => ['required', new title],
+            'description' => ['required', new desc],
             'start_date'  => 'required|date',
             'due_date'    => 'required|date|after_or_equal:start_date',
             'status'      => 'required',
@@ -66,70 +64,80 @@ class ProjectController extends Controller
 
         $project = Project::create([
             'name'        => $request->name,
-            'description' => $request->description ,
+            'description' => $request->description,
             'start_date'  => $request->start_date,
             'due_date'    => $request->due_date,
             'status'      => $request->status,
             'leader_id'   => $request->leader_id,
         ]);
 
-        if (!empty($request->members)) {
-           $project->members()->attach($request->members);
+        if ($project) {
+            if (!empty($request->members)) {
+                $project->members()->attach($request->members);
+            }
+
+            if ($project->leader) {
+                Mail::to($project->leader->email)->send(new LeaderAssignedMail($project));
+            }
+
+            return redirect()->route('projectlist')->with('success', 'Project created successfully.');
+        } else {
+            return back()->with('error', 'Failed to create project. Please try again.');
         }
-         
-        Mail::to($project->leader->email)->send(new LeaderAssignedMail($project));
-       
-
-        return redirect()->route('projectlist')->with('success', 'Project created successfully.');
-    }
-
-    /**
-     * Show the specified project.
-     */
-    public function show($id)
-    {
-        
     }
 
     /**
      * Show the form for editing the specified project.
      */
     public function edit($id)
-{
-    $project = Project::with('members')->find($id);
-    $users = User::all();
+    {
+        $project = Project::with('members')->find($id);
 
-    return view('storeproject',['activePage' => 'storeproject'], compact('project', 'users'));
-}
+        if (!$project) {
+            return redirect()->route('projectlist')->with('error', 'Project not found.');
+        }
 
-public function update(Request $request, $id)
-{
-    $request->validate([
-        'name'        => ['required',new title],
-        'description' => ['required',new desc],
-        'start_date'  => 'required|date',
-        'due_date'    => 'required|date|after_or_equal:start_date',
-        'status'      => 'required|string',
-        'leader_id'   => 'required|exists:users,id',
-        'members'     => 'required|array|exists:users,id',
-    ]);
+        $users = User::all();
+        return view('storeproject', ['activePage' => 'storeproject'], compact('project', 'users'));
+    }
 
-    $project = Project::find($id);
+    /**
+     * Update the specified project.
+     */
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'name'        => ['required', new title],
+            'description' => ['required', new desc],
+            'start_date'  => 'required|date',
+            'due_date'    => 'required|date|after_or_equal:start_date',
+            'status'      => 'required|string',
+            'leader_id'   => 'required|exists:users,id',
+            'members'     => 'required|array|exists:users,id',
+        ]);
 
-    $project->update([
-        'name'        => $request->name,
-        'description' => $request->description,
-        'start_date'  => $request->start_date,
-        'due_date'    => $request->due_date,
-        'status'      => $request->status,
-        'leader_id'   => $request->leader_id,
-    ]);
+        $project = Project::find($id);
 
-    $project->members()->sync($request->members);
+        if (!$project) {
+            return redirect()->route('projectlist')->with('error', 'Project not found.');
+        }
 
-    return redirect()->route('projectlist')->with('success', 'Project updated successfully.');
-}
+        $updated = $project->update([
+            'name'        => $request->name,
+            'description' => $request->description,
+            'start_date'  => $request->start_date,
+            'due_date'    => $request->due_date,
+            'status'      => $request->status,
+            'leader_id'   => $request->leader_id,
+        ]);
 
+        if ($updated) {
+            $project->members()->sync($request->members);
+            return redirect()->route('projectlist')->with('success', 'Project updated successfully.');
+        } else {
+            return redirect()->route('projectlist')->with('error', 'Failed to update project. Please try again.');
+        }
+    }
 
     /**
      * Remove the specified project.
@@ -137,11 +145,17 @@ public function update(Request $request, $id)
     public function destroy($id)
     {
         $project = Project::find($id);
-        $project->members()->detach(); 
-        
-        $project->delete();
 
-        return redirect()->route('projectlist')->with('success', 'Project deleted successfully.');
-         
+        if (!$project) {
+            return redirect()->route('projectlist')->with('error', 'Project not found.');
+        }
+
+        $project->members()->detach();
+
+        if ($project->delete()) {
+            return redirect()->route('projectlist')->with('success', 'Project deleted successfully.');
+        } else {
+            return redirect()->route('projectlist')->with('error', 'Failed to delete project. Please try again.');
+        }
     }
 }

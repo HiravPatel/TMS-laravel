@@ -47,7 +47,7 @@
 
 
                     <div class="d-flex gap-4 text-muted small mt-2">
-                        <span><i class="fa fa-folder text-warning"></i> {{ $task->project->name }}</span>
+                        <span><i class="fa fa-folder text-warning"></i> {{ $task->project->name }}-{{ $task->project->id }} </span>
                         <span><i class="fa fa-user text-primary"></i> {{ $task->assignedTo->name }}</span>
                         <span><i class="fa fa-calendar text-danger"></i> Due: {{ $task->due_date }}</span>
                     </div>

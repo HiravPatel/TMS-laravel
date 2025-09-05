@@ -9,13 +9,14 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-        <!-- Toastr CSS -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+    <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
     <!-- jQuery (Toastr depends on jQuery) -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
-    <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
+
 </head>
 
 <body class="bg-light">
@@ -59,7 +60,7 @@
                 <li class="nav-item bg"><a href="{{ route('storebug') }}"
                         class="nav-link text-light {{ request()->routeIs('storebug') ? 'active bg text-light' : '' }}"><span><i
                                 class="fa fa-plus m-2" aria-hidden="true"></i></span> Add Bug</a></li>
-               </ul>
+            </ul>
         </aside>
 
         {{-- Main Content --}}
@@ -67,31 +68,34 @@
 
             {{-- header --}}
             <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3 py-3">
-    <div class="container-fluid d-flex justify-content-end">
-          {{-- <i class="fa fa-bell fa-2x me-4 text-secondary" aria-hidden="true"></i> --}}
-        <div class="dropdown">
-            <a href="#" class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle" id="userDropdown"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                <li class="dropdown-item text-center">
-                    <strong>{{ Auth::user()->name ?? 'Admin' }}</strong><br>
-                    <small class="text-muted">{{ Auth::user()->role->role ?? 'Role' }}</small>
-                </li>
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit" class="dropdown-item" style="background: red;color:white">
-                            <i class="fa fa-power-off me-2"></i> Logout
-                        </button>
-                    </form>
-                </li>
-            </ul>
-        </div>
-    </div>
-</header>
+                <div class="container-fluid d-flex justify-content-end">
+                    {{-- <i class="fa fa-bell fa-2x me-4" aria-hidden="true"></i> --}}
+                    <div class="dropdown">
+                        <a href="#"
+                            class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
+                            id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="fa fa-user-circle fa-2x" aria-hidden="true"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
+                            <li class="dropdown-item text-center">
+                                <strong>{{ Auth::user()->name ?? 'Admin' }}</strong><br>
+                                <small class="text-muted">{{ Auth::user()->role->role ?? 'Role' }}</small>
+                            </li>
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST">
+                                    @csrf
+                                    <button type="submit" class="dropdown-item" style="background: red;color:white">
+                                        <i class="fa fa-power-off me-2"></i> Logout
+                                    </button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </header>
 
 
             {{-- Page Content --}}
@@ -105,25 +109,16 @@
             </footer>
         </div>
     </div>
-    {{-- sidebar --}}
+
 </body>
-    <script>
-        $(document).ready(function() {
-            @if(Session::has('success'))
-                toastr.success("{{ Session::get('success') }}");
-            @endif
+<script>
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
 
-            @if(Session::has('error'))
-                toastr.error("{{ Session::get('error') }}");
-            @endif
+    @if (session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
 
-            @if(Session::has('warning'))
-                toastr.warning("{{ Session::get('warning') }}");
-            @endif
-
-            @if(Session::has('info'))
-                toastr.info("{{ Session::get('info') }}");
-            @endif
-        });
-    </script>
 </html>
