@@ -15,10 +15,11 @@
                         </form>
 
                     </div>
-
+                      @if (Auth::user()->role->role == 'Admin')
                     <a href="{{ route('addemployee') }}" class="btn btn-primary">
                         <i class="fa fa-plus" aria-hidden="true"></i> Add Member
                     </a>
+                    @endif
                 </div>
             </div>
 

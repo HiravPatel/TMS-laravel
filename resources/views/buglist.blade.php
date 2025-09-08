@@ -23,12 +23,14 @@
                                     Progress</option>
                                 <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed
                                 </option>
-                                <option value="To Do" {{ request('status') == 'To Dp' ? 'selected' : '' }}>To Do</option>
+                                <option value="To Do" {{ request('status') == 'To Do' ? 'selected' : '' }}>To Do</option>
                             </select>
                         </form>
+                         @if (Auth::user()->role->role !== 'Backened Developer')
                         <a href="{{ route('storebug') }}" class="btn btn-primary">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add bug
                         </a>
+                        @endif
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -89,6 +91,7 @@
                                                 <i class="fa fa-trash"></i>
                                             </button>
                                         </form>
+                                    </td>
                 </div>
                 </tr>
                 @endforeach

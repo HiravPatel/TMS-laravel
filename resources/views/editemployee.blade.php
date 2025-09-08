@@ -8,10 +8,6 @@
       <h3 class="card-title mb-2 fw-bold">Edit Employee</h3>
       <p class="text-muted mb-4">Update the details for this employee</p>
 
-      @if(session('success'))
-          <div class="alert alert-success">{{ session('success') }}</div>
-      @endif
-
       @if ($errors->any())
           <div class="alert alert-danger">
               <ul class="mb-0">

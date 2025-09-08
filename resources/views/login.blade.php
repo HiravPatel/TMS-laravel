@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TaskFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- jQuery (Toastr depends on jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body class="bg-light">
 
@@ -17,14 +23,6 @@
                     <div class="text-center mb-4">
                         <img src="{{ asset('images/logo2.png') }}" alt="TaskFlow Logo" class="img-fluid" style="max-height: 60px;">
                     </div>
-
-                    @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
-
-                      @if(session('error'))
-                        <div class="alert alert-warning">{{ session('error') }}</div>
-                    @endif
 
                     <form method="POST" action="{{ route('login.post') }}">
                         @csrf
@@ -53,4 +51,13 @@
 </div>
 
 </body>
+    <script>
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if (session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+ </script>
 </html>

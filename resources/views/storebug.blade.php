@@ -11,10 +11,6 @@
                 {{ isset($bug) ? 'Update the details of the Bug' : 'Fill in the details for the new Bug' }}
             </p>
 
-            @if(session('success'))
-                <div class="alert alert-success">{{ session('success') }}</div>
-            @endif
-
             <form method="POST" 
                 action="{{ isset($bug) ? route('updatebug', $bug->id) : route('storebugform') }}" enctype="multipart/form-data">
                 @csrf

@@ -7,9 +7,6 @@
                 <div class="card-body">
                     <h3 class="card-title mb-2 fw-bold">Add New Employee</h3>
                     <p class="text-muted mb-4">Fill in the details for the new employee</p>
-                    @if (session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
                     <form method="POST" action="{{ route('addemployeeform') }}">
                         @csrf
                         <div class="row g-3 mb-3">
