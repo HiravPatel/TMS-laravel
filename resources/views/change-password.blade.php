@@ -3,14 +3,17 @@
 <head>
     <title>Change Password</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+     <!-- Toastr CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
+    <!-- jQuery (Toastr depends on jQuery) -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- Toastr JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
 <body class="bg-light">
 <div class="container mt-5">
     <div class="card p-4 shadow-sm" style="max-width: 500px; margin:auto;">
         <h3 class="mb-4">Change Your Password</h3>
-          @if(session('success'))
-                        <div class="alert alert-success">{{ session('success') }}</div>
-                    @endif
         <form method="POST" action="{{ route('updatePassword') }}">
             @csrf
             <div class="mb-3">
@@ -33,4 +36,13 @@
     </div>
 </div>
 </body>
+<script>
+    @if (session('success'))
+        toastr.success("{{ session('success') }}");
+    @endif
+
+    @if (session('error'))
+        toastr.error("{{ session('error') }}");
+    @endif
+</script>
 </html>

@@ -28,10 +28,11 @@
                                 <option value="To Do" {{ request('status') == 'To Do' ? 'selected' : '' }}>To Do</option>
                             </select>
                         </form>
-
+                         @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
                         <a href="{{ route('storeproject') }}" class="btn btn-primary">
                             <i class="fa fa-plus" aria-hidden="true"></i> Add Project
                         </a>
+                        @endif
                     </div>
                 </div>
                 
@@ -44,7 +45,9 @@
                                 <th>Status</th>
                                 <th>Members</th>
                                 <th>Dates</th>
+                                @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
                                 <th class="text-center">Action</th>
+                                @endif
                             </tr>
                         </thead>
                         <tbody>
@@ -131,6 +134,7 @@
                                         <span class="mx-1">-</span>
                                         <small>{{ $project->due_date }}</small>
                                     </td>
+                                       @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
                                     <td class="text-center">
                                         <a href="{{ route('editproject', $project->id) }}"
                                             class="btn btn-sm btn-success me-1">
@@ -146,6 +150,7 @@
                                             </button>
                                         </form>
                                     </td>
+                                    @endif
                                 </tr>
                             @endforeach
                         </tbody>

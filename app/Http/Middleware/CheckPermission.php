@@ -31,19 +31,6 @@ class CheckPermission
             })
             ->exists();
 
-        //     $userPermissions = RoleMapping::where('role_id', $user->role_id)->with('permissions') ->get()
-        //     ->pluck('name')->toArray();
-
-       
-        // $hasPermission = false;
-        // foreach ($permissions as $perm) {
-        //     if (in_array($perm, $userPermissions)) {
-        //         $hasPermission = true;
-        //         break;
-        //     }
-        // }
-
-
         if (!$hasPermission) {
             abort(403, 'You do not have access to this page.');
         }

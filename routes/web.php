@@ -20,8 +20,6 @@ use App\Http\Controllers\SuperadminController;
 |
 */
 
-// Route::get('/logout', [AuthController::class, 'logout'])->name('logout');
-
 
 
 
