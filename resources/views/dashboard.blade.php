@@ -7,28 +7,28 @@
         {{-- Top Stats --}}
         <div class="row g-3 mb-4">
             <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 text-center p-3" style="background-color: #F1C40F">
+                <div class="card shadow-sm border-0 rounded-4 text-center p-3  bg-warning">
                     <h6 class="text-light">Projects</h6>
                     <h3 class="fw-bold text-light">{{ $projectsCount }}</h3>
                     <a href="{{ route('projectlist') }}" class="small text-decoration-none text-light">View All</a>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 text-center p-3" style="background-color: #7D3C98">
+                <div class="card shadow-sm border-0 rounded-4 text-center p-3 bg-secondary">
                     <h6 class="text-light">Tasks</h6>
                     <h3 class="fw-bold text-light">{{ $tasksCount }}</h3>
                     <a href="{{ route('tasklist') }}" class="small text-decoration-none text-light">View All</a>
                 </div>
             </div>
             <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 text-center p-3" style="background-color:#52BE80">
+                <div class="card shadow-sm border-0 rounded-4 text-center p-3 bg-success">
                     <h6 class="text-light">Bugs</h6>
                     <h3 class="fw-bold text-light">{{ $bugsCount }}</h3>
                     <a href="{{ route('buglist') }}" class="small text-decoration-none text-light">View All</a>
                 </div>
             </div>
-            <div class="col-md-3">
-                <div class="card shadow-sm border-0 rounded-4 text-center p-3" style="background-color:#CD6155">
+            <div class="col-md-3"> 
+                <div class="card shadow-sm border-0 rounded-4 text-center p-3 bg-info">
                     <h6 class="text-light">Users</h6>
                     <h3 class="fw-bold text-light">{{ $usersCount }}</h3>
                     <a href="{{ route('employeelist') }}" class="small text-decoration-none text-light">View All</a>
@@ -56,7 +56,8 @@
                         <tbody>
                             @forelse($recentProjects as $project)
                                 <tr>
-                                    <td>{{ $project->name }}</td>
+                                    <td>{{ strtoupper(collect(explode(' ', $project->name))->take(4)->map(fn($word) => substr($word, 0, 1))->implode('')) }}
+                                        - {{ $project->id }}</td>
                                     <td>{{ $project->leader->name }}</td>
                                     <td>
                                         <span
@@ -91,13 +92,11 @@
                 <div class="row g-3">
                     @forelse($recentUsers as $user)
                         <div class="col-md-3 text-center">
-                            <div class="avatar-circle mx-auto mb-2 bg-warning text-dark d-flex align-items-center justify-content-center"
-                                style="width:50px; height:50px; border-radius:50%; font-weight:bold;">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
-                                @if (str_contains($user->name, ' '))
-                                    {{ strtoupper(substr(explode(' ', $user->name)[1], 0, 1)) }}
-                                @endif
-                            </div>
+                           <div class="avatar-circle mx-auto mb-2 bg-warning text-dark d-flex align-items-center justify-content-center"
+     style="width:50px; height:50px; border-radius:50%; font-weight:bold;">
+    {{ strtoupper(substr($user->name, 0, 1)) }}@if (str_contains($user->name, ' ')){{ strtoupper(substr(explode(' ', $user->name)[1], 0, 1)) }}@endif
+</div>
+
                             <h6 class="mb-0">{{ $user->name }}</h6>
                             <small class="text-muted">{{ $user->role->role ?? 'No Role' }}</small>
                         </div>

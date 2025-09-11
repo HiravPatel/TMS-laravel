@@ -26,10 +26,10 @@
                                 <option value="To Do" {{ request('status') == 'To Do' ? 'selected' : '' }}>To Do</option>
                             </select>
                         </form>
-                         @if (Auth::user()->role->role !== 'Backened Developer')
-                        <a href="{{ route('storebug') }}" class="btn btn-primary">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add bug
-                        </a>
+                        @if (Auth::user()->role->role !== 'Backened Developer')
+                            <a href="{{ route('storebug') }}" class="btn btn-primary">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add bug
+                            </a>
                         @endif
                     </div>
                 </div>
@@ -52,24 +52,39 @@
                                 <tr>
                                     <td>
                                         @if ($bug->image)
-                                            <img src="{{ asset($bug->image) }}" alt="Bug Image" width="60">
+                                            <img src="{{ asset($bug->image) }}" alt="Bug Image" width="60"
+                                                data-bs-toggle="modal" data-bs-target="#imageModal{{ $bug->id }}"
+                                                style="cursor:pointer;">
+                                            <div class="modal fade" id="imageModal{{ $bug->id }}" tabindex="-1"
+                                                aria-hidden="true">
+                                                <div class="modal-dialog modal-dialog-centered">
+                                                    <div class="modal-content">
+                                                        <div class="modal-body text-center">
+                                                            <img src="{{ asset($bug->image) }}" class="img-fluid rounded"
+                                                                alt="Bug Image">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @else
                                             <span class="text-muted">No Image</span>
                                         @endif
                                     </td>
+
                                     <td>{{ $bug->bug_name }}</td>
                                     <td>{{ $bug->bug_desc }}</td>
                                     <td>{{ $bug->task->task_name }}</td>
                                     <td>{{ $bug->User->name }}</td>
                                     <td>
-                                        <span
-                                            class="badge rounded-pill 
-                            @if ($bug->priority == 'High') bg-danger 
-                            @elseif($bug->priority == 'Medium') bg-warning 
-                            @else bg-secondary @endif">
-                                            {{ $bug->priority }}
-                                        </span>
+                                        @if ($bug->priority == 'High')
+                                            <i class="fa fa-exclamation-circle text-danger px-3 py-2"></i>
+                                        @elseif ($bug->priority == 'Medium')
+                                            <i class="fa fa-exclamation-triangle text-warning px-3 py-2"></i>
+                                        @else
+                                            <i class="fa fa-minus-circle text-secondary px-3 py-2"></i>
+                                        @endif
                                     </td>
+
                                     <td>
                                         <span
                                             class="badge 

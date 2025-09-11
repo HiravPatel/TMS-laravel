@@ -15,10 +15,10 @@
                         </form>
 
                     </div>
-                      @if (Auth::user()->role->role == 'Admin')
-                    <a href="{{ route('addemployee') }}" class="btn btn-primary">
-                        <i class="fa fa-plus" aria-hidden="true"></i> Add Member
-                    </a>
+                    @if (Auth::user()->role->role == 'Admin')
+                        <a href="{{ route('addemployee') }}" class="btn btn-primary">
+                            <i class="fa fa-plus" aria-hidden="true"></i> Add Member
+                        </a>
                     @endif
                 </div>
             </div>
@@ -29,8 +29,11 @@
                         <div class="team-card p-3 bg-white rounded shadow-sm text-center">
                             <div class="avatar-circle"
                                 style="background-color: {{ ['#F5276C', '#f6c23e', '#C81CDE', '#5EA529'][$index % 4] }};">
-                                {{ strtoupper(substr($user->name, 0, 1)) }}
+                                {{ strtoupper(substr($user->name, 0, 1) . (str_contains($user->name, ' ') ? substr(explode(' ', $user->name)[1], 0, 1) : '')) }}
                             </div>
+
+
+
                             <h6 class="mb-0 fw-bold">{{ $user->name }}</h6>
                             <div class="mt-2">
                                 <span class="badge bg-primary">{{ $user->role->role ?? 'No Role' }}</span>
