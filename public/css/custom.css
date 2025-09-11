@@ -31,3 +31,36 @@
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(0,0,0,0.15);
         }
+        .nav-text {
+            display: inline;
+        }
+        @media (max-width: 768px) {
+            .nav-text {
+                display: none;
+            }
+
+            .sidebar {
+                width: 70px;
+                text-align: center;
+            }
+
+            .sidebar .nav-link {
+                justify-content: center;
+                padding: 10px;
+            }
+
+             .nav-item:hover {
+            background-color: #FF6600;
+        }
+        }
+        .toast-success {
+    background-color: #031701 !important; 
+    color: #fff !important;           
+}
+
+.toast-error {
+    background-color: #280101 !important;  
+    color: #fff !important;       
+}
+
+

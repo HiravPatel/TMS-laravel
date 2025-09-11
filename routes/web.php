@@ -4,7 +4,9 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\ExcelController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\WorklogController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\SuperadminController;
@@ -87,5 +89,9 @@ Route::post('forgot-password', [AuthController::class, 'sendOtp'])->name('sendOt
 Route::get('verify-otp', [AuthController::class, 'showVerifyOtpForm'])->name('verifyOtpForm');
 Route::post('verify-otp', [AuthController::class, 'verifyOtp'])->name('verifyOtp');
 
+Route::get('/workloglist', [WorklogController::class,'index'])->name('workloglist');
 
+Route::get('/storeworklog', [WorklogController::class,'create'])->name('storeworklog')->middleware('auth');
+Route::post('/storeworklog', [WorklogController::class,'store'])->name('storeworklogform')->middleware('auth');
 
+Route::get('/worklogs/export', [ExcelController::class, 'exportExcel'])->name('worklogsexport');

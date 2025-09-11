@@ -25,7 +25,7 @@ class title implements Rule
      */
     public function passes($attribute, $value)
     {
-        return preg_match('/^[a-zA-Z0-9 ]{1,20}$/',$value);
+        return preg_match('/^(?! )[a-zA-Z0-9 ]{1,50}$/',$value);
     }
 
     /**

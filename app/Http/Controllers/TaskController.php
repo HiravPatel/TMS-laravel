@@ -12,7 +12,7 @@ class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Task::with(['project', 'assignedto']);
+        $query = Task::with(['project', 'assignedto']); 
 
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
@@ -62,8 +62,8 @@ class TaskController extends Controller
             'assigned_to' => 'required|exists:users,id',
             'priority'    => 'required|string',
             'status'      => 'required|string',
-            'start_date'  => 'date',
-            'due_date'    => 'date|after_or_equal:start_date',
+            'start_date'  => 'required|date',
+            'due_date'    => 'required|date|after_or_equal:start_date',
         ]);
 
         $task = Task::create($request->all());

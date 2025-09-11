@@ -28,14 +28,14 @@
                                 <option value="To Do" {{ request('status') == 'To Do' ? 'selected' : '' }}>To Do</option>
                             </select>
                         </form>
-                         @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
-                        <a href="{{ route('storeproject') }}" class="btn btn-primary">
-                            <i class="fa fa-plus" aria-hidden="true"></i> Add Project
-                        </a>
+                        @if (in_array(Auth::user()->role->role, ['Backened Developer', 'Admin']))
+                            <a href="{{ route('storeproject') }}" class="btn btn-primary">
+                                <i class="fa fa-plus" aria-hidden="true"></i> Add Project
+                            </a>
                         @endif
                     </div>
                 </div>
-                
+
                 <div class="table-responsive">
                     <table class="table align-middle table-hover">
                         <thead class="table-success">
@@ -45,15 +45,19 @@
                                 <th>Status</th>
                                 <th>Members</th>
                                 <th>Dates</th>
-                                @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
-                                <th class="text-center">Action</th>
+                                @if (in_array(Auth::user()->role->role, ['Backened Developer', 'Admin']))
+                                    <th class="text-center">Action</th>
                                 @endif
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($projects as $project)
                                 <tr>
-                                    <td>{{ $project->name }}-{{ $project->id }}</td>
+                                    <td>
+                                        {{ strtoupper(collect(explode(' ', $project->name))->take(4)->map(fn($word) => substr($word, 0, 1))->implode('')) }}
+                                        - {{ $project->id }}
+                                    </td>
+
                                     <td>{{ $project->leader->name }}</td>
                                     <td>
                                         <span
@@ -134,22 +138,22 @@
                                         <span class="mx-1">-</span>
                                         <small>{{ $project->due_date }}</small>
                                     </td>
-                                       @if (in_array(Auth::user()->role->role, ['Backened Developer','Admin']))
-                                    <td class="text-center">
-                                        <a href="{{ route('editproject', $project->id) }}"
-                                            class="btn btn-sm btn-success me-1">
-                                            <i class="fa fa-pencil"></i>
-                                        </a>
-                                        <form action="{{ route('deleteproject', $project->id) }}" method="POST"
-                                            class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-sm btn-danger"
-                                                onclick="return confirm('Are you sure you want to delete this project?');">
-                                                <i class="fa fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </td>
+                                    @if (in_array(Auth::user()->role->role, ['Backened Developer', 'Admin']))
+                                        <td class="text-center">
+                                            <a href="{{ route('editproject', $project->id) }}"
+                                                class="btn btn-sm btn-success me-1">
+                                                <i class="fa fa-pencil"></i>
+                                            </a>
+                                            <form action="{{ route('deleteproject', $project->id) }}" method="POST"
+                                                class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn btn-sm btn-danger"
+                                                    onclick="return confirm('Are you sure you want to delete this project?');">
+                                                    <i class="fa fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </td>
                                     @endif
                                 </tr>
                             @endforeach
