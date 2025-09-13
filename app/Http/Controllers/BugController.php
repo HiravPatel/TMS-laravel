@@ -7,29 +7,42 @@ use App\Rules\desc;
 use App\Models\Task;
 use App\Rules\OnlyAlpha;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class BugController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Bug::with(['task', 'user']);
+        $userId   = Auth::id();
+$userRole = Auth::user()->role->role;
 
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
-        }
+$query = Bug::with(['task', 'user']);
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('bug_name', 'LIKE', "%{$search}%")
-                  ->orWhereHas('task', function ($q2) use ($search) {
-                      $q2->where('task_name', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('user', function ($q3) use ($search) {
-                      $q3->where('name', 'LIKE', "%{$search}%");
-                  });
-            });
-        }
+if ($userRole !== 'Tester') {
+    $query->where(function ($q) use ($userId) {
+        // Bug directly assigned to this user
+        $q->where('user_id', $userId);
+
+        //   OR bug belongs to a task assigned to this user
+        //   ->orWhereHas('task', function ($q2) use ($userId) {
+        //       $q2->where('assigned_to', $userId);
+        //   })
+
+        //   OR bug belongs to a task inside a project where user is leader
+        //   ->orWhereHas('task.project', function ($q3) use ($userId) {
+        //       $q3->where('leader_id', $userId);
+        //   })
+
+        //    OR bug belongs to a task inside a project where user is a member
+        //   ->orWhereHas('task.project.members', function ($q4) use ($userId) {
+        //       $q4->where('users.id', $userId);
+        //   });
+    });
+}
+
+$bugs = $query->orderBy('id', 'desc')->paginate(5);
+
+
 
         $bugs = $query->orderBy('id', 'desc')->paginate(5);
         return view('buglist', compact('bugs'));
@@ -150,4 +163,5 @@ class BugController extends Controller
             return redirect()->route('buglist')->with('error', 'Failed to delete bug.');
         }
     }
+
 }

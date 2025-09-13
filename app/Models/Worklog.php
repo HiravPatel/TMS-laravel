@@ -9,20 +9,27 @@ class Worklog extends Model
 {
     use HasFactory;
 
-    public $timestamps=true;
+    public $timestamps=false;
 
     protected $table="worklogs";
 
     protected $fillable = [
         'title',
         'project_id',
-        'user_id',
+        'task_id',
+        'description',
         'date',
+        'user_id',
     ];
 
     public function project()
     {
         return $this->belongsTo(Project::class);
+    }
+
+    public function task()
+    {
+        return $this->belongsTo(Task::class);
     }
 
     public function user()

@@ -33,6 +33,7 @@
                         <span class="nav-text">Dashboard</span>
                     </a>
                 </li>
+
                 <li class="nav-item">
 
                     @if (Auth::user()->role->role == 'Admin')
@@ -136,7 +137,7 @@
             {{-- header --}}
             <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3 py-3">
                 <div class="container-fluid d-flex justify-content-end">
-                    <i class="fa fa-bell fa-2x me-4" aria-hidden="true"></i>
+                    {{-- <i class="fa fa-bell fa-2x me-4" aria-hidden="true"></i> --}}
                     <div class="dropdown">
                         <a href="#"
                             class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"

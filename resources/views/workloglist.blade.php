@@ -25,18 +25,18 @@
                 <table class="table align-middle table-hover">
                     <thead class="table-success">
                         <tr>
-                            <th>Title</th>
                             <th>Project</th>
                             <th>User</th>
+                            <th>Description</th>
                             <th>Date</th>
                         </tr>
                     </thead>
                     <tbody>
                         @forelse ($logs as $log)
                             <tr>
-                                <td>{{ $log->title }}</td>
                                 <td>{{ $log->project->name }}</td>
                                 <td>{{ $log->user->name }}</td>
+                                <td>{{ $log->description }}</td>
                                 <td>{{ $log->date }}</td>
                             </tr>
                         @empty

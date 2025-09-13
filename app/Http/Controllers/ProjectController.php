@@ -8,6 +8,7 @@ use App\Rules\title;
 use App\Models\Project;
 use Illuminate\Http\Request;
 use App\Mail\LeaderAssignedMail;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class ProjectController extends Controller
@@ -17,8 +18,20 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Project::with(['leader', 'members']);
+    
+      $userId = Auth::id();
+    $userRole = Auth::user()->role->role;
 
+    $query = Project::with(['leader', 'members']);
+
+    if ($userRole !== 'Admin') {
+        $query->where(function ($q) use ($userId) {
+            $q->where('leader_id', $userId)
+              ->orWhereHas('members', function ($q2) use ($userId) {
+                  $q2->where('users.id', $userId);
+              });
+        });
+    }
         if ($request->has('status') && $request->status != '') {
             $query->where('status', $request->status);
         }
@@ -158,4 +171,18 @@ class ProjectController extends Controller
             return redirect()->route('projectlist')->with('error', 'Failed to delete project. Please try again.');
         }
     }
+    public function getDates($id)
+{
+    $project = Project::find($id);
+
+    if (!$project) {
+        return response()->json(['error' => 'Project not found'], 404);
+    }
+
+    return response()->json([
+        'start_date' => $project->start_date,
+        'due_date'   => $project->due_date,
+    ]);
+}
+
 }

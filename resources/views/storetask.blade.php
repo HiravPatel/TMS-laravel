@@ -111,7 +111,7 @@
                 <div class="row g-3 mb-3">
                     <div class="col-md-6">
                         <label>Start Date</label> 
-                        <input type="date" name="start_date" class="form-control @error('start_date') is-invalid @enderror"
+                        <input type="date" name="start_date" id="startDate" class="form-control @error('start_date') is-invalid @enderror"
                                value="{{ old('start_date', $task->start_date ?? '') }}">
                                @error('start_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -119,7 +119,7 @@
                     </div>
                     <div class="col-md-6">
                         <label>Due Date</label>
-                        <input type="date" name="due_date" class="form-control @error('due_date') is-invalid @enderror"
+                        <input type="date" name="due_date" id="duedate" class="form-control @error('due_date') is-invalid @enderror"
                                value="{{ old('due_date', $task->due_date ?? '') }}">
                                @error('due_date')
                                     <div class="invalid-feedback">{{ $message }}</div>
@@ -139,23 +139,40 @@
 </div>
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
         <script>
-            $('#project').on('change', function() {
-                var projectId = $(this).val();
-                if (projectId) {
-                    $.ajax({
-                        url: '/projects/' + projectId + '/members',
-                        type: 'GET',
-                        success: function(data) {
-                            $('#assigned_to').empty().append('<option value="">Select Member</option>');
-                            $.each(data, function(key, member) {
-                                $('#assigned_to').append('<option value="' + member.id + '">' +
-                                    member.name + '</option>');
-                            });
-                        }
-                    });
-                } else {
-                    $('#assigned_to').empty().append('<option value="">Select Member</option>');
+          $('#project').on('change', function() {
+    var projectId = $(this).val();
+
+    if (projectId) {
+        $.ajax({
+            url: '/projects/' + projectId + '/members',
+            type: 'GET',
+            success: function(data) {
+                $('#assigned_to').empty().append('<option value="">Select Member</option>');
+                $.each(data, function(key, member) {
+                    $('#assigned_to').append('<option value="' + member.id + '">' +
+                        member.name + '</option>');
+                });
+            }
+        });
+
+        $.ajax({
+            url: '/projects/' + projectId + '/dates',
+            type: 'GET',
+            success: function(data) {
+                if (data.start_date && data.due_date) {
+                    $('#startDate').attr('min', data.start_date).attr('max', data.due_date);
+                    $('#duedate').attr('min', data.start_date).attr('max', data.due_date);
+                    $('#startDate').val('');
+                    $('#duedate').val('');
                 }
-            });
+            }
+        });
+
+    } else {
+        $('#assigned_to').empty().append('<option value="">Select Member</option>');
+        $('#startDate, #duedate').removeAttr('min max');
+    }
+});
+
         </script>
 @endsection

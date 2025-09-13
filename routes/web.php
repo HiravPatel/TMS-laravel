@@ -1,5 +1,6 @@
 <?php
 
+use App\Models\Notification;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\BugController;
 use App\Http\Controllers\AuthController;
@@ -59,6 +60,8 @@ Route::put('editproject/{id}', [ProjectController::class, 'update'])->name('upda
 
 Route::delete('deleteproject/{id}', [ProjectController::class, 'destroy'])->name('deleteproject')->middleware('auth');
 
+Route::get('/projects/{id}/dates', [ProjectController::class, 'getDates']);
+
 Route::get('/tasklist', [TaskController::class,'index'])->name('tasklist')->middleware('auth');
 
 Route::get('/storetask', [TaskController::class,'create'])->name('storetask')->middleware('auth');
@@ -95,3 +98,15 @@ Route::get('/storeworklog', [WorklogController::class,'create'])->name('storewor
 Route::post('/storeworklog', [WorklogController::class,'store'])->name('storeworklogform')->middleware('auth');
 
 Route::get('/worklogs/export', [ExcelController::class, 'exportExcel'])->name('worklogsexport');
+
+Route::get('/check-due-date', [App\Http\Controllers\WorklogController::class, 'checkDueDate'])->name('checkDueDate');
+
+Route::post('/notifications/{id}/read', function($id){
+    $notification = Notification::find($id);
+    if($notification && $notification->user_id == auth()->id()){
+        $notification->update(['is_read' => 1]);
+    }
+});
+
+
+
