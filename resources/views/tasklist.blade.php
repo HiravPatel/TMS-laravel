@@ -38,68 +38,71 @@
         </div>
 
 
-        @foreach ($tasks as $task)
-            <div class="card shadow-sm border-0 mb-3">
-                <div class="card-body">
+          @forelse ($tasks as $task)
+        <div class="card shadow-sm border-0 mb-3">
+            <div class="card-body">
 
-                    <div>
-                        <p class="mb-2 fw-bold">{{ $task->task_name }}</p>
-                        <p class="text-muted mb-2">{{ $task->description }}</p>
-                    </div>
-
-
-                    <div class="d-flex gap-4 text-muted small mt-2">
-                        <span><i class="fa fa-folder text-warning"></i>
-                            {{ $task->project->name }}-{{ $task->project->id }} </span>
-                        <span><i class="fa fa-user text-primary"></i> {{ $task->assignedTo->name }}</span>
-                        <span><i class="fa fa-calendar text-danger"></i> Due: {{ $task->due_date }}</span>
-                    </div>
-
-                    <div class="d-flex justify-content-between align-items-start">
-                        <div class="mt-2">
-                            <span>
-                                @if ($task->priority == 'High')
-                                        <i class="fa fa-exclamation-circle text-danger px-2"></i>
-                                @elseif ($task->priority == 'Medium')
-                                        <i class="fa fa-exclamation-triangle text-warning px-2"></i>
-                                @else
-                                        <i class="fa fa-minus-circle text-secondary px-2"></i>
-                                @endif
-                            </span>
-
-                            <span
-                                class="badge rounded-pill 
-                            @if ($task->status == 'Completed') bg-success 
-                            @elseif($task->status == 'In progress') bg-info 
-                            @else bg-secondary @endif">
-                                {{ $task->status }}
-                            </span>
-                        </div>
-                        <div class="btn-group">
-                            <div>
-                                <a href="{{ route('updatetask', $task->id) }}" class="btn btn-sm btn-success me-1">
-                                    <i class="fa fa-pencil"></i>
-                                </a>
-                            </div>
-                            <div>
-                                <form action="{{ route('deletetask', $task->id) }}" method="POST"
-                                    onsubmit="return confirm('Are you sure you want to delete this task?')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn btn-sm btn-danger">
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-
+                <div>
+                    <p class="mb-2 fw-bold">{{ $task->task_name }}</p>
+                    <p class="text-muted mb-2">{{ $task->description }}</p>
                 </div>
+
+                <div class="d-flex gap-4 text-muted small mt-2">
+                    <span><i class="fa fa-folder text-warning"></i>
+                        {{ $task->project->name }}-{{ $task->project->id }} </span>
+                    <span><i class="fa fa-user text-primary"></i> {{ $task->assignedTo->name }}</span>
+                    <span><i class="fa fa-calendar text-danger"></i> Due: {{ $task->due_date }}</span>
+                </div>
+
+                <div class="d-flex justify-content-between align-items-start">
+                    <div class="mt-2">
+                        <span>
+                            @if ($task->priority == 'High')
+                                <i class="fa fa-exclamation-circle text-danger px-2"></i>
+                            @elseif ($task->priority == 'Medium')
+                                <i class="fa fa-exclamation-triangle text-warning px-2"></i>
+                            @else
+                                <i class="fa fa-minus-circle text-secondary px-2"></i>
+                            @endif
+                        </span>
+
+                        <span
+                            class="badge rounded-pill 
+                                @if ($task->status == 'Completed') bg-success 
+                                @elseif($task->status == 'In progress') bg-info 
+                                @else bg-secondary @endif">
+                            {{ $task->status }}
+                        </span>
+                    </div>
+                    <div class="btn-group">
+                        <a href="{{ route('updatetask', $task->id) }}" class="btn btn-sm btn-success me-1">
+                            <i class="fa fa-pencil"></i>
+                        </a>
+                        <form action="{{ route('deletetask', $task->id) }}" method="POST"
+                            onsubmit="return confirm('Are you sure you want to delete this task?')">
+                            @csrf
+                            @method('DELETE')
+                            <button type="submit" class="btn btn-sm btn-danger">
+                                <i class="fa fa-trash"></i>
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
             </div>
-        @endforeach
-        <div class="mt-3" style="display: flex; justify-content: flex-end;">
-            {{ $tasks->appends(request()->query())->links() }}
         </div>
+    @empty
+       <tr>
+            <td colspan="6" class="text-center">
+                No tasks found.
+            </td>
+        </tr>
+    @endforelse
+
+    <div class="mt-3" style="display: flex; justify-content: flex-end;">
+        {{ $tasks->appends(request()->query())->links() }}
+    </div>
+
 
     </div>
 @endsection

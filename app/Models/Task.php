@@ -8,13 +8,13 @@ use Illuminate\Database\Eloquent\softDeletes;
 
 class Task extends Model
 {
-    use HasFactory,softDeletes;
+    use HasFactory,SoftDeletes;
 
     protected $table="tasks";
 
     protected $guarded=[];
 
-    public $timestamp=true;
+    public $timestamps=true;
 
     public function project()
     {

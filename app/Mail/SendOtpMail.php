@@ -33,6 +33,6 @@ class SendOtpMail extends Mailable
     public function build()
     {
        return $this->subject('Your OTP for Password Reset')
-                    ->view('send-otp');
+                    ->view('password_otp');
     }
 }

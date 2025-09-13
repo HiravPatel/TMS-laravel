@@ -7,31 +7,37 @@ use App\Models\Task;
 use App\Rules\title;
 use App\Models\Project;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class TaskController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Task::with(['project', 'assignedto']); 
+       $userId = Auth::id();
+       $userRole = Auth::user()->role->role;
 
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
-        }
+    $query = Task::with(['project', 'assignedto']);
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('task_name', 'LIKE', "%{$search}%")
-                  ->orWhereHas('project', function ($q2) use ($search) {
-                      $q2->where('name', 'LIKE', "%{$search}%");
-                  })
-                  ->orWhereHas('assignedto', function ($q3) use ($search) {
-                      $q3->where('name', 'LIKE', "%{$search}%");
-                  });
-            });
-        }
+    // If Admin, show all tasks
+    if ($userRole !== 'Admin') {
+    $query->where(function ($q) use ($userId) {
+        // Task is directly assigned to the user
+        $q->where('assigned_to', $userId);
 
-        $tasks = $query->orderBy('id', 'desc')->paginate(3);
+          // Task belongs to a project where user is leader
+        //   ->orWhereHas('project', function ($q2) use ($userId) {
+        //       $q2->where('leader_id', $userId);
+        //   })
+
+          // Task belongs to a project where user is a member
+        //   ->orWhereHas('project.members', function ($q3) use ($userId) {
+        //       $q3->where('users.id', $userId);
+        //   });
+    });
+    }
+
+    $tasks = $query->orderBy('id', 'desc')->paginate(3);
+
 
         return view('tasklist', compact('tasks'));
     }
@@ -129,4 +135,5 @@ class TaskController extends Controller
             return redirect()->route('tasklist')->with('error', 'Failed to delete task. Please try again.');
         }
     }
+
 }
