@@ -72,7 +72,11 @@ Route::get('/projects/{id}/members', [TaskController::class, 'getMembers'])->mid
 Route::get('edittask/{id}', [TaskController::class, 'edit'])->name('edittask')->middleware('auth');
 Route::put('edittask/{id}', [TaskController::class, 'update'])->name('updatetask')->middleware('auth');
 
+Route::patch('/task/{id}/status', [TaskController::class, 'updateStatus'])->name('updateTaskStatus');
+
 Route::delete('deletetask/{id}', [TaskController::class, 'destroy'])->name('deletetask')->middleware('auth');
+
+Route::patch('/task/{id}/status', [TaskController::class, 'updateStatus'])->name('updateTaskStatus');
 
 Route::get('buglist',[BugController::class,'index'])->name('buglist')->middleware('auth');
 
@@ -85,6 +89,9 @@ Route::get('editbug/{id}',[BugController::class,'edit'])->name('editbug')->middl
 Route::put('editbug/{id}',[BugController::class,'update'])->name('updatebug')->middleware(['auth','permission:edit_bug']);
 
 Route::delete('deletebug/{id}',[BugController::class,'destroy'])->name('deletebug')->middleware(['auth','permission:delete_bug']);
+
+Route::patch('/bug/{id}/status', [BugController::class, 'updateStatus'])->name('updateBugStatus');
+
 
 Route::get('forgot-password', [AuthController::class, 'showForgotPasswordForm'])->name('forgotPasswordForm');
 Route::post('forgot-password', [AuthController::class, 'sendOtp'])->name('sendOtp');
@@ -99,14 +106,9 @@ Route::post('/storeworklog', [WorklogController::class,'store'])->name('storewor
 
 Route::get('/worklogs/export', [ExcelController::class, 'exportExcel'])->name('worklogsexport');
 
-Route::get('/check-due-date', [App\Http\Controllers\WorklogController::class, 'checkDueDate'])->name('checkDueDate');
+Route::get('/check-due-date', [WorklogController::class, 'checkDueDate'])->name('checkDueDate');
 
-Route::post('/notifications/{id}/read', function($id){
-    $notification = Notification::find($id);
-    if($notification && $notification->user_id == auth()->id()){
-        $notification->update(['is_read' => 1]);
-    }
-});
+
 
 
 

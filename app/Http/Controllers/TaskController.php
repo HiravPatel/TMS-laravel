@@ -18,8 +18,7 @@ class TaskController extends Controller
 
     $query = Task::with(['project', 'assignedto']);
 
-    // If Admin, show all tasks
-    if ($userRole !== 'Admin') {
+    if (!in_array($userRole, ['Admin','Tester'])) {
     $query->where(function ($q) use ($userId) {
         // Task is directly assigned to the user
         $q->where('assigned_to', $userId);
@@ -34,6 +33,25 @@ class TaskController extends Controller
         //       $q3->where('users.id', $userId);
         //   });
     });
+    }
+
+      if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+        
+     if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('description', 'LIKE', "%{$search}%")
+              ->orWhere('due_date', 'LIKE', "%{$search}%")
+              ->orWhereHas('project', function ($q2) use ($search) {
+                  $q2->where('name', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('assignedto', function ($q3) use ($search) {
+                  $q3->where('name', 'LIKE', "%{$search}%");
+              });
+        });
     }
 
     $tasks = $query->orderBy('id', 'desc')->paginate(3);
@@ -135,5 +153,17 @@ class TaskController extends Controller
             return redirect()->route('tasklist')->with('error', 'Failed to delete task. Please try again.');
         }
     }
+public function updateStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:To Do,In progress,QA Tester,Completed,Reopened',
+    ]);
+
+    $task = Task::find($id);
+
+    $task->update(['status' => $request->status]);
+
+    return redirect()->route('tasklist')->with('success', 'Task status updated successfully.');
+}
 
 }

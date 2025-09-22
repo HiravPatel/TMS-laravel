@@ -95,9 +95,10 @@
                         <label>Status</label>
                         <select name="status" class="form-control @error('status') is-invalid @enderror">
                             <option value="">Select Status</option>
-                            @foreach(['To do', 'In progress', 'Completed'] as $status)
+                            @foreach(['To do', 'In progress',  'QA Tester', 'Completed', 'Reopened'] as $status)
                                 <option value="{{ $status }}" 
-                                    {{ old('status', $task->status ?? '') == $status ? 'selected' : '' }}>
+                                    {{ old('status', $task->status ?? '') == $status ? 'selected' : '' }}
+                                      @if(auth()->user()->role->role == 'Admin' && in_array($status, ['In progress', 'QA Tester', 'Completed', 'Reopened'])) disabled @endif>
                                     {{ $status }}
                                 </option>
                             @endforeach

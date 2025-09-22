@@ -5,13 +5,13 @@
 
         <div class="container mt-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                <p class="fw-bold mb-0">List of all users in the system.</p>
+                 <h5 class="fw-bold mb-0"> <i class="fa fa-users m-2 text-primary" aria-hidden="true"></i>Users Management</h5>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex">
                         <form action="{{ route('employeelist') }}" method="GET" class="input-group me-2">
                             <input type="text" name="search" class="form-control" placeholder="Search..."
                                 value="{{ request('search') }}">
-                            <button type="submit" class="btn btn-secondary">Search</button>
+                            <button type="submit" class="btn btn-dark"><i class="fa fa-search"></i></button>
                         </form>
 
                     </div>
@@ -26,7 +26,7 @@
             <div class="row g-3">
                 @foreach ($users as $index => $user)
                     <div class="col-md-4">
-                        <div class="team-card p-3 bg-white rounded shadow-sm text-center">
+                        <div class="team-card p-3 bg-white rounded-4 shadow-sm text-center">
                             <div class="avatar-circle"
                                 style="background-color: {{ ['#F5276C', '#f6c23e', '#C81CDE', '#5EA529'][$index % 4] }};">
                                 {{ strtoupper(substr($user->name, 0, 1) . (str_contains($user->name, ' ') ? substr(explode(' ', $user->name)[1], 0, 1) : '')) }}

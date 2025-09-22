@@ -37,6 +37,26 @@
                         </div>
                     </div>
 
+                    <div class="row mb-3">
+
+                        <div class="col-md-12">
+                            <label for="leader" class="form-label">Leader</label>
+                            <select class="form-select @error('leader_id') is-invalid @enderror" id="leader" name="leader_id">
+                                <option disabled {{ !isset($project) ? 'selected' : '' }}>Select leader</option>
+                                @foreach ($users as $user)
+                                    <option value="{{ $user->id }}"
+                                        {{ old('leader_id', $project->leader_id ?? '') == $user->id ? 'selected' : '' }}>
+                                        {{ $user->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                              @error('leader_id')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                        </div>
+                    </div>
+
+
                     <div class="row g-3 mb-3">
                         <div class="col-md-6">
                             <label for="startDate" class="form-label">Start Date</label>
@@ -51,37 +71,6 @@
                             <input type="date" class="form-control @error('due_date') is-invalid @enderror" id="duedate" name="due_date"
                                 value="{{ old('due_date', $project->due_date ?? '') }}">
                                  @error('due_date')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                        </div>
-                    </div>
-
-                    <div class="row g-3 mb-3">
-                        <div class="col-md-6">
-                            <label for="status" class="form-label">Status</label>
-                            <select class="form-select @error('status') is-invalid @enderror" id="status" name="status">
-                                <option disabled {{ !isset($project) ? 'selected' : '' }}>Select status</option>
-                                <option value="To do" {{ old('status', $project->status ?? '') == 'To do' ? 'selected' : '' }}>To do</option>
-                                <option value="In Progress" {{ old('status', $project->status ?? '') == 'In Progress' ? 'selected' : '' }}>In Progress</option>
-                                <option value="Completed" {{ old('status', $project->status ?? '') == 'Completed' ? 'selected' : '' }}>Completed</option>
-                            </select>
-                              @error('status')
-                                    <div class="invalid-feedback">{{ $message }}</div>
-                                @enderror
-                        </div>
-
-                        <div class="col-md-6">
-                            <label for="leader" class="form-label">Leader</label>
-                            <select class="form-select @error('leader_id') is-invalid @enderror" id="leader" name="leader_id">
-                                <option disabled {{ !isset($project) ? 'selected' : '' }}>Select leader</option>
-                                @foreach ($users as $user)
-                                    <option value="{{ $user->id }}"
-                                        {{ old('leader_id', $project->leader_id ?? '') == $user->id ? 'selected' : '' }}>
-                                        {{ $user->name }}
-                                    </option>
-                                @endforeach
-                            </select>
-                              @error('leader_id')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                         </div>
