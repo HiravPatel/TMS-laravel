@@ -42,7 +42,7 @@
                                  @error('password')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
-                                 <a href="{{route('forgotPasswordForm')}}" class="m-2 text-success" style="text-decoration:none;float:right;">Forgot Password?</a>
+                                 <a href="{{route('forgotPasswordForm')}}" class="m-2" style="text-decoration:none;float:right;">Forgot Password?</a>
                         </div>
                         <button type="submit" class="btn w-100 text-white fw-bold rounded-pill mt-4" style="background-color: #FF6600;">Login</button>
                     </form>

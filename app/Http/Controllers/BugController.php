@@ -40,6 +40,25 @@ if ($userRole !== 'Tester') {
     });
 }
 
+  if ($request->has('status') && $request->status != '') {
+            $query->where('status', $request->status);
+        }
+
+if ($request->filled('search')) {
+        $search = $request->search;
+
+        $query->where(function ($q) use ($search) {
+            $q->where('bug_name', 'LIKE', "%{$search}%")          
+              ->orWhere('bug_desc', 'LIKE', "%{$search}%")
+              ->orWhereHas('task', function ($q2) use ($search) { 
+                  $q2->where('task_name', 'LIKE', "%{$search}%");
+              })
+              ->orWhereHas('user', function ($q3) use ($search) {
+                  $q3->where('name', 'LIKE', "%{$search}%");
+              });
+        });
+    }
+
 $bugs = $query->orderBy('id', 'desc')->paginate(5);
 
 
@@ -67,6 +86,7 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
         ]);
 
         $data = $request->all();
+
 
         if ($request->hasFile('image')) {
             $imageName = time() . '.' . $request->image->extension();
@@ -114,7 +134,7 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
             'task_id'  => 'required|exists:tasks,id',
             'user_id'  => 'required|exists:users,id',
             'priority' => 'required|in:High,Medium,Low',
-            'status'   => 'required|in:Todo,In Progress,Completed',
+            'status'   => 'required|in:Todo,In Progress,QA Tester,Completed,Reopened',
             'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
         ]);
 
@@ -163,5 +183,24 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
             return redirect()->route('buglist')->with('error', 'Failed to delete bug.');
         }
     }
+   public function updateStatus(Request $request, $id)
+{
+    $request->validate([
+        'status' => 'required|in:Todo,In Progress,QA Tester,Completed,Reopened',
+    ]);
+
+    $bug = Bug::find($id);
+    $bug->status = $request->status;
+    $bug->save();
+
+    // If Tester reopens → send them to edit page to add details
+    if ($request->status === 'Reopened' && Auth::user()->role->role == 'Tester') {
+        return redirect()->route('editbug', $bug->id)
+            ->with('success', 'Bug reopened. Please update details.');
+    }
+
+    return redirect()->route('buglist')->with('success', 'Status updated successfully!');
+}
+
 
 }

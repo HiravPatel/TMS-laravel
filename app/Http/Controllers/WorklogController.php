@@ -16,8 +16,7 @@ public function index(Request $request)
 {
   $user = Auth::user();
 
-    // Admin can see all logs, others only their own
-    $query = Worklog::with(['project','user']);
+  $query = Worklog::with(['project','user']);
 
     // Search functionality
     if ($request->has('search') && $request->search != '') {
@@ -34,7 +33,6 @@ public function index(Request $request)
         });
     }
 
-    // Order and paginate
     $logs = $query->orderBy('date', 'desc')->paginate(10);
 
     return view('workloglist', compact('logs'));
@@ -45,9 +43,8 @@ public function index(Request $request)
     {
         $user = auth()->user();
 
-        // Get only projects the logged-in user is assigned to
         $projects = Project::whereHas('members', function ($q) use ($user) {
-    $q->where('member_id', $user->id);  // ✅ Correct
+    $q->where('member_id', $user->id);  
 })->get();
 
         return view('storeworklog', compact('projects'));

@@ -18,13 +18,13 @@ class ProjectController extends Controller
      */
     public function index(Request $request)
     {
-    
-      $userId = Auth::id();
+
+    $userId = Auth::id();
     $userRole = Auth::user()->role->role;
 
     $query = Project::with(['leader', 'members']);
 
-    if ($userRole !== 'Admin') {
+    if (!in_array($userRole, ['Admin','Tester'])) {
         $query->where(function ($q) use ($userId) {
             $q->where('leader_id', $userId)
               ->orWhereHas('members', function ($q2) use ($userId) {
@@ -32,21 +32,27 @@ class ProjectController extends Controller
               });
         });
     }
-        if ($request->has('status') && $request->status != '') {
-            $query->where('status', $request->status);
-        }
 
-        if ($request->has('search') && $request->search != '') {
-            $search = $request->search;
-            $query->where(function ($q) use ($search) {
-                $q->where('name', 'LIKE', "%{$search}%")
-                  ->orWhereHas('leader', function ($q2) use ($search) {
-                      $q2->where('name', 'LIKE', "%{$search}%");
-                  });
-            });
-        }
+       if ($request->has('search') && $request->search != '') {
+    $search = $request->search;
+    $query->where(function ($q) use ($search) {
+        $q->where('projects.name', 'LIKE', "%{$search}%")
 
-        $projects = $query->orderBy('id', 'desc')->paginate(5);
+        ->orWhereHas('leader', function ($q2) use ($search) {
+            $q2->where('name', 'LIKE', "%{$search}%");
+        })
+
+        ->orWhereHas('members', function ($q3) use ($search) {
+            $q3->where('name', 'LIKE', "%{$search}%");
+        })
+         ->orWhereRaw("UPPER(CONCAT(LEFT(SUBSTRING_INDEX(projects.name, ' ', 1), 1),
+                                    LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(projects.name, ' ', 2), ' ', -1), 1),
+                                    LEFT(SUBSTRING_INDEX(SUBSTRING_INDEX(projects.name, ' ', 3), ' ', -1), 1))) LIKE ?", ["%".strtoupper($search)."%"]);
+    });
+}
+
+
+        $projects = $query->orderBy('id', 'desc')->paginate(12);
 
         return view('projectlist', compact('projects'));
     }
@@ -70,7 +76,6 @@ class ProjectController extends Controller
             'description' => ['required', new desc],
             'start_date'  => 'required|date',
             'due_date'    => 'required|date|after_or_equal:start_date',
-            'status'      => 'required',
             'leader_id'   => 'required|exists:users,id',
             'members'     => 'required|array|exists:users,id',
         ]);
@@ -80,7 +85,6 @@ class ProjectController extends Controller
             'description' => $request->description,
             'start_date'  => $request->start_date,
             'due_date'    => $request->due_date,
-            'status'      => $request->status,
             'leader_id'   => $request->leader_id,
         ]);
 
@@ -124,7 +128,6 @@ class ProjectController extends Controller
             'description' => ['required', new desc],
             'start_date'  => 'required|date',
             'due_date'    => 'required|date|after_or_equal:start_date',
-            'status'      => 'required|string',
             'leader_id'   => 'required|exists:users,id',
             'members'     => 'required|array|exists:users,id',
         ]);
@@ -140,7 +143,6 @@ class ProjectController extends Controller
             'description' => $request->description,
             'start_date'  => $request->start_date,
             'due_date'    => $request->due_date,
-            'status'      => $request->status,
             'leader_id'   => $request->leader_id,
         ]);
 
