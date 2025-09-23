@@ -82,4 +82,13 @@ public function getDates($id)
         'due_date'   => $project->due_date,
     ]);
 }
+public function edit($id){
+
+}
+public function update($id){
+
+}
+public function destroy($id){
+    
+}
 }

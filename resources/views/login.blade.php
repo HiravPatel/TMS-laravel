@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login - TaskFlow</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
      <link rel="stylesheet" href="{{ asset('css/custom.css') }}">
      <!-- Toastr CSS -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css" rel="stylesheet" />
@@ -13,8 +14,7 @@
     <!-- Toastr JS -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
 </head>
-<body class="bg-light" >
-
+<body class="bg-light">
 
 <div class="container vh-100">
     <div class="row h-100 justify-content-center align-items-center">
@@ -22,8 +22,8 @@
             <div class="card shadow-lg rounded-4">
                 <div class="card-body p-4">
                     
-                    <div class="text-center mb-4">
-                        <img src="{{ asset('images/logo2.png') }}" alt="TaskFlow Logo" class="img-fluid" style="max-height: 60px;">
+                    <div class="profile-icon">
+                        <i class="fa fa-user-circle" aria-hidden="true" style="font-size: 100px;color:#45556C"></i>
                     </div>
 
                     <form method="POST" action="{{ route('login.post') }}">

@@ -3,7 +3,7 @@
 @section('content')
     <div class="container mt-4">
         <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-bold mb-0"> <i class="fa fa-tasks m-2 text-primary" aria-hidden="true"></i>Task Management</h5>
+            <h5 class="fw-bold mb-0"> <i class="fa fa-tasks m-2" aria-hidden="true"></i>Task Management</h5>
 
             <div class="d-flex align-items-center gap-2">
                 {{-- Search Box --}}

@@ -4,7 +4,7 @@
         <div class="card shadow-sm rounded-4 border-0">
             <div class="card-body">
                 <div class="d-flex justify-content-between align-items-center mb-3">
-                    <h5 class="fw-bold mb-0"> <i class="fa fa-folder-open m-2 text-primary" aria-hidden="true"></i>Project Management</h5>
+                    <h5 class="fw-bold mb-0"> <i class="fa fa-folder-open m-2" aria-hidden="true"></i>Project Management</h5>
 
                     <div class="d-flex align-items-center">
                         <!-- Search -->
