@@ -23,14 +23,15 @@
     <div class="d-flex min-vh-100">
         <aside id="sidebar" class="sidebar bg-dark">
             <div class="d-flex justify-content-between align-items-center p-3">
-                <h3 class="mb-0 fw-bold text-uppercase"
-                    style="background: linear-gradient(90deg,#0dcaf0,#FFF085);
+                <p class="mb-0 fw-bold text-uppercase"
+                    style="
+                    background: linear-gradient(90deg,#0dcaf0,#FFF085); 
            -webkit-background-clip: text;
            -webkit-text-fill-color: transparent;
            letter-spacing: 1.5px;">
-                    <i class="fa fa-signal" aria-hidden="true"></i>
+                    <i class="fa fa-signal m-2" aria-hidden="true"></i>
                      <span class="text-light fw-bold nav-text ms-2">TASKFLOW</span>
-                </h3>
+            </p>
 
 
 
@@ -152,8 +153,8 @@
 
             {{-- header --}}
             <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-                 <button class="btn border-0 me-3" id="sidebarToggle" style="background-color: #FF6600;">
-            <i class="fa fa-bars fa-lg text-light"></i>
+                 <button class="btn border-0 me-3 shadow-sm" id="sidebarToggle">
+            <i class="fa fa-bars fa-lg text-dark"></i>
         </button>
                 <div class="container-fluid d-flex justify-content-end">
                     <i class="fa fa-calendar text-muted" aria-hidden="true"></i><span id="currentDateTime"
