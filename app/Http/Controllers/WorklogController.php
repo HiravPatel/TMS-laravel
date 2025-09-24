@@ -14,15 +14,18 @@ class WorklogController extends Controller
 
 public function index(Request $request)
 {
-  $user = Auth::user();
+    $user = Auth::user();
 
-  $query = Worklog::with(['project','user']);
+    $query = Worklog::with(['project','user']);
 
-    // Search functionality
+    if ($user->role->role !== 'Admin') {   
+        $query->where('user_id', $user->id);
+    }
+
     if ($request->has('search') && $request->search != '') {
         $search = $request->search;
         $query->where(function($q) use ($search) {
-            $q->Where('description', 'LIKE', "%{$search}%")
+            $q->where('description', 'LIKE', "%{$search}%")
               ->orWhere('date', 'LIKE', "%{$search}%")
               ->orWhereHas('project', function($q2) use ($search) {
                   $q2->where('name', 'LIKE', "%{$search}%");
@@ -33,10 +36,11 @@ public function index(Request $request)
         });
     }
 
-    $logs = $query->orderBy('date', 'desc')->paginate(10);
+    $logs = $query->orderBy('date')->paginate(10);
 
     return view('workloglist', compact('logs'));
 }
+
 
 
     public function create()
@@ -82,13 +86,43 @@ public function getDates($id)
         'due_date'   => $project->due_date,
     ]);
 }
-public function edit($id){
+public function edit($id)
+{
+    $user = auth()->user();
+    $log = Worklog::findOrFail($id);
 
-}
-public function update($id){
+    $projects = Project::whereHas('members', function ($q) use ($user) {
+        $q->where('member_id', $user->id);  
+    })->get();
 
+    return view('storeworklog', compact('log', 'projects'));
 }
+
+public function update(Request $request, $id)
+{
+    $log = Worklog::findOrFail($id);
+
+    $request->validate([
+        'project_id' => 'required|exists:projects,id',
+        'description' => 'nullable|string',
+        'date' => 'required|date',
+    ]);
+
+    $log->update([
+        'project_id' => $request->project_id,
+        'description' => $request->description,
+        'date' => $request->date,
+    ]);
+
+    return redirect()->route('workloglist')->with('success', 'Work log updated successfully!');
+}
+
 public function destroy($id){
-    
+
+    $log = Worklog::find($id);
+
+    $log->delete();
+
+    return redirect()->route('workloglist')->with('success', 'Work log deleted successfully!');
 }
 }

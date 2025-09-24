@@ -108,6 +108,12 @@ Route::get('/worklogs/export', [ExcelController::class, 'exportExcel'])->name('w
 
 Route::get('/check-due-date', [WorklogController::class, 'checkDueDate'])->name('checkDueDate');
 
+Route::delete('deleteworklog/{id}',[WorklogController::class,'destroy'])->name('deleteworklog');
+
+Route::get('editworklog/{id}', [WorklogController::class, 'edit'])->name('editworklog');
+Route::put('editworklog/{id}', [WorklogController::class, 'update'])->name('updateworklog');
+
+
 
 
 

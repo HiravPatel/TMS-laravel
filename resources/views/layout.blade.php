@@ -24,13 +24,12 @@
         <aside id="sidebar" class="sidebar bg-dark">
             <div class="d-flex justify-content-between align-items-center p-3">
                 <p class="mb-0 fw-bold text-uppercase"
-                    style="
-                    background: linear-gradient(90deg,#0dcaf0,#FFF085); 
+                    style="background: linear-gradient(90deg,#0dcaf0,#FFF085);
            -webkit-background-clip: text;
            -webkit-text-fill-color: transparent;
            letter-spacing: 1.5px;">
                     <i class="fa fa-signal m-2" aria-hidden="true"></i>
-                     <span class="text-light fw-bold nav-text ms-2">TASKFLOW</span>
+                     <span class="text-light nav-text ms-2">TASKFLOW</span>
             </p>
 
 
@@ -85,8 +84,6 @@
                     </li>
                 @endif
 
-
-                @if (Auth::user()->role->role == 'Admin')
                     <li class="nav-item">
                         <a href="{{ route('workloglist') }}"
                             class="nav-link text-light {{ request()->routeIs('workloglist') ? 'active bg text-light' : '' }}">
@@ -94,7 +91,6 @@
                             <span class="nav-text">Work Logs</span>
                         </a>
                     </li>
-                @endif
 
                 @if (Auth::user()->role->role == 'Admin')
                     <li class="nav-item">
@@ -139,8 +135,8 @@
                 @if (in_array(Auth::user()->role->role, ['Backened Developer', 'Tester']))
                     <li class="nav-item">
                         <a href="{{ route('storeworklog') }}" class="nav-link text-light">
-                            <i class="fa fa-calendar-check-o m-2" aria-hidden="true"></i>
-                            <span class="nav-text">Work Log</span>
+                            <i class="fa fa-plus m-2" aria-hidden="true"></i>
+                            <span class="nav-text">Add Work Log</span>
                         </a>
                     </li>
                 @endif
