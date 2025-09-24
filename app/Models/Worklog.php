@@ -4,12 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\softDeletes;
 
 class Worklog extends Model
 {
-    use HasFactory;
+    use HasFactory,softDeletes;
 
-    public $timestamps=false;
+    public $timestamps=true;
 
     protected $table="worklogs";
 
