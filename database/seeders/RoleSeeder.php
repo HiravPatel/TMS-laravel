@@ -15,11 +15,9 @@ class RoleSeeder extends Seeder
     public function run()
     {
        Role::insert([
-            ['role' => 'Superadmin', 'created_at' => now(), 'updated_at' => now()],
             ['role' => 'Admin', 'created_at' => now(), 'updated_at' => now()],
             ['role' => 'Tester', 'created_at' => now(), 'updated_at' => now()],
-            ['role' => 'Frontend Developer', 'created_at' => now(), 'updated_at' => now()],
-            ['role' => 'Backened Developer', 'created_at' => now(), 'updated_at' => now()],
+            ['role' => 'Developer', 'created_at' => now(), 'updated_at' => now()],
         ]);
     }
 }

@@ -6,6 +6,7 @@ use App\Http\Controllers\BugController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\ExcelController;
+use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\WorklogController;
 use App\Http\Controllers\EmployeeController;
@@ -82,8 +83,8 @@ Route::get('buglist',[BugController::class,'index'])->name('buglist')->middlewar
 
 Route::get('/tasks/{id}/members', [BugController::class, 'getAssignedUser'])->middleware('auth');
 
-Route::get('storebug',[BugController::class,'create'])->name('storebug')->middleware(['auth','permission:add_bug']);
-Route::post('storebug',[BugController::class,'store'])->name('storebugform')->middleware(['auth','permission:add_bug']);
+Route::get('storebug',[BugController::class,'create'])->name('storebug');
+Route::post('storebug',[BugController::class,'store'])->name('storebugform');
 
 Route::get('editbug/{id}',[BugController::class,'edit'])->name('editbug')->middleware(['auth','permission:edit_bug']);
 Route::put('editbug/{id}',[BugController::class,'update'])->name('updatebug')->middleware(['auth','permission:edit_bug']);
@@ -112,6 +113,9 @@ Route::delete('deleteworklog/{id}',[WorklogController::class,'destroy'])->name('
 
 Route::get('editworklog/{id}', [WorklogController::class, 'edit'])->name('editworklog');
 Route::put('editworklog/{id}', [WorklogController::class, 'update'])->name('updateworklog');
+
+Route::get('/profile', [ProfileController::class, 'show'])->name('myprofileshow')->middleware('auth');
+
 
 
 

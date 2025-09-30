@@ -5,7 +5,7 @@
 
         <div class="container mt-4">
             <div class="d-flex justify-content-between align-items-center mb-3">
-                 <h5 class="fw-bold mb-0"> <i class="fa fa-users m-2" aria-hidden="true"></i>Users Management</h5>
+                <h5 class="fw-bold mb-0"> <i class="fa fa-users m-2" aria-hidden="true"></i>Users Management</h5>
                 <div class="d-flex justify-content-between align-items-center">
                     <div class="d-flex">
                         <form action="{{ route('employeelist') }}" method="GET" class="input-group me-2">

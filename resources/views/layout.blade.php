@@ -29,8 +29,8 @@
            -webkit-text-fill-color: transparent;
            letter-spacing: 1.5px;">
                     <i class="fa fa-signal m-2" aria-hidden="true"></i>
-                     <span class="text-light nav-text ms-2">TASKFLOW</span>
-            </p>
+                    <span class="text-light nav-text ms-2">TASKFLOW</span>
+                </p>
 
 
 
@@ -53,7 +53,7 @@
                             <i class="fa fa-users m-2" aria-hidden="true"></i>
                             <span class="nav-text">Team Members</span>
                         </a>
-                         @endif
+                    @endif
                 </li>
 
                 <li class="nav-item">
@@ -63,7 +63,7 @@
                             <i class="fa fa-folder-open m-2" aria-hidden="true"></i>
                             <span class="nav-text">Projects</span>
                         </a>
-                         @endif
+                    @endif
                 </li>
 
                 <li class="nav-item">
@@ -84,13 +84,13 @@
                     </li>
                 @endif
 
-                    <li class="nav-item">
-                        <a href="{{ route('workloglist') }}"
-                            class="nav-link text-light {{ request()->routeIs('workloglist') ? 'active bg text-light' : '' }}">
-                            <i class="fa fa-calendar-check-o m-2" aria-hidden="true"></i>
-                            <span class="nav-text">Work Logs</span>
-                        </a>
-                    </li>
+                <li class="nav-item">
+                    <a href="{{ route('workloglist') }}"
+                        class="nav-link text-light {{ request()->routeIs('workloglist') ? 'active bg text-light' : '' }}">
+                        <i class="fa fa-calendar-check-o m-2" aria-hidden="true"></i>
+                        <span class="nav-text">Work Logs</span>
+                    </a>
+                </li>
 
                 @if (Auth::user()->role->role == 'Admin')
                     <li class="nav-item">
@@ -132,7 +132,7 @@
                     </li>
                 @endif
 
-                @if (in_array(Auth::user()->role->role, ['Backened Developer', 'Tester']))
+                @if (in_array(Auth::user()->role->role, ['Developer', 'Tester']))
                     <li class="nav-item">
                         <a href="{{ route('storeworklog') }}" class="nav-link text-light">
                             <i class="fa fa-plus m-2" aria-hidden="true"></i>
@@ -149,51 +149,62 @@
 
             {{-- header --}}
             <header class="navbar navbar-expand-lg navbar-light bg-white shadow-sm px-3">
-                 <button class="btn border-0 me-3 shadow-sm" id="sidebarToggle">
-            <i class="fa fa-bars fa-lg text-dark"></i>
-        </button>
+                <button class="btn border-0 me-3 shadow-sm" id="sidebarToggle">
+                    <i class="fa fa-bars fa-lg text-dark"></i>
+                </button>
                 <div class="container-fluid d-flex justify-content-end">
                     <i class="fa fa-calendar text-muted" aria-hidden="true"></i><span id="currentDateTime"
                         class="fw-bold text-muted px-3"></span>
-                    <i class="fa fa-bell fa-2x me-4" aria-hidden="true"></i>
                     <div class="dropdown">
                         <a href="#"
                             class="d-flex align-items-center text-dark text-decoration-none dropdown-toggle"
                             id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
 
-                            {{-- User initials --}}
                             @php
-                                $name = Auth::user()->name ?? 'Admin';
+                                $name = Auth::user()->name;
                                 $initials = collect(explode(' ', $name))
                                     ->map(fn($part) => strtoupper(substr($part, 0, 1)))
                                     ->take(2)
                                     ->implode('');
                             @endphp
-
                             <div class="rounded-circle bg-danger text-white fw-bold d-flex align-items-center justify-content-center"
                                 style="width: 40px; height: 40px;">
                                 {{ $initials }}
                             </div>
                         </a>
 
-                        <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="userDropdown">
-                            <li class="dropdown-item text-center">
-                                <strong>{{ $name }}</strong><br>
+                        <ul class="dropdown-menu dropdown-menu-end shadow-lg border-0 rounded-3 p-2"
+                            aria-labelledby="userDropdown" style="min-width: 220px;">
+                            <li class="text-center px-3 py-2">
+                                <div class="fw-bold">{{ $name }}</div>
                                 <small class="text-muted">{{ Auth::user()->role->role ?? 'Role' }}</small>
                             </li>
+
                             <li>
                                 <hr class="dropdown-divider">
                             </li>
                             <li>
-                                <form action="{{ route('logout') }}" method="POST">
+                                <a href="{{ route('myprofileshow') }}"
+                                    class="dropdown-item d-flex align-items-center">
+                                    <i class="fa fa-user me-2 text-primary"></i> My Profile
+                                </a>
+                            </li>
+
+                            <li>
+                                <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                                <form action="{{ route('logout') }}" method="POST" class="m-0">
                                     @csrf
-                                    <button type="submit" class="dropdown-item" style="background: red;color:white">
+                                    <button type="submit"
+                                        class="dropdown-item d-flex align-items-center text-danger fw-bold">
                                         <i class="fa fa-sign-out me-2"></i> Logout
                                     </button>
                                 </form>
                             </li>
                         </ul>
                     </div>
+
 
                 </div>
             </header>
@@ -236,7 +247,7 @@
     }
 
     setInterval(updateDateTime, 1000);
-    updateDateTime(); 
+    updateDateTime();
 </script>
 <script>
     const sidebar = document.getElementById('sidebar');
@@ -244,7 +255,7 @@
 
     toggleBtn.addEventListener('click', () => {
         if (window.innerWidth < 1024) {
-            sidebar.classList.toggle('expanded'); 
+            sidebar.classList.toggle('expanded');
         } else {
             sidebar.classList.toggle('collapsed');
         }

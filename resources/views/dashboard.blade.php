@@ -4,7 +4,7 @@
     <div class="container mt-4">
         <h3 class="fw-bold mb-4"><i class="fa fa-home m-2" aria-hidden="true"></i>Dashboard</h3>
         <div class="row g-3 mb-4">
-            {{-- Projects --}}
+
             <div class="col-md-3">
                 <div class="card shadow-sm border-0 rounded-4 p-3 bg-warning text-light">
                     <div class="d-flex justify-content-between align-items-center">
@@ -23,7 +23,7 @@
                 </div>
             </div>
 
-            {{-- Tasks --}}
+
             <div class="col-md-3">
                 <div class="card shadow-sm border-0 rounded-4 text-center text-light p-3" style="background-color: #721378">
                     <div class="d-flex justify-content-between align-items-center">
@@ -41,7 +41,7 @@
                 </div>
             </div>
 
-            {{-- Bugs --}}
+
             <div class="col-md-3">
                 <div class="card shadow-sm border-0 rounded-4 text-center text-light p-3 bg-success">
                     <div class="d-flex justify-content-between align-items-center">
@@ -59,7 +59,7 @@
                 </div>
             </div>
 
-            {{-- Users --}}
+
             <div class="col-md-3">
                 <div class="card shadow-sm border-0 rounded-4 text-center text-light p-3" style="background-color:#C11007">
                     <div class="d-flex justify-content-between align-items-center">
@@ -81,14 +81,12 @@
 
 
         <div class="row mb-4">
-            {{-- Chart --}}
             <div class="col-md-6">
                 <div class="card shadow-sm border-0 rounded-4 h-100">
                     <div class="card-header bg-white d-flex justify-content-between align-items-center">
                         <h6 class="fw-bold mb-0">Project Task Status Overview</h6>
                     </div>
                     <div class="card-body">
-                        {{-- Project Dropdown --}}
                         <form method="GET" action="{{ route('dashboard') }}">
                             <div class="row g-3 mb-3">
                                 <div class="col-md-12">
@@ -105,7 +103,6 @@
                             </div>
                         </form>
 
-                        {{-- Chart Area --}}
                         @if (isset($selectedProject))
                             <h6 class="fw-bold mb-3 text-center">Tasks for: {{ $selectedProject->name }}</h6>
 
@@ -234,9 +231,6 @@
 
         </div>
 
-
-
-        {{-- Latest Users --}}
         <div class="card shadow-sm border-0 rounded-4 mb-4">
             <div class="card-header bg-white d-flex justify-content-between align-items-center">
                 <h6 class="fw-bold mb-0">New Members</h6>

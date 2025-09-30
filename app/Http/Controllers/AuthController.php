@@ -68,6 +68,7 @@ public function login(Request $request)
         $user = Auth::user();
 
         if ($user->first_login == 1) {
+            Auth::login($user);
             return redirect()->route('changePasswordForm');
         }
 
@@ -145,7 +146,10 @@ public function sendOtp(Request $request)
 
     if ($otpRecord) {
         Mail::to($user->email)->send(new SendOtpMail($user, $otp));
-        return redirect()->route('verifyOtpForm')->with('success', 'OTP sent to your email.');
+        return redirect()->route('verifyOtpForm')->with([
+    'success' => 'OTP sent to your email.',
+    'email'   => $user->email,
+]);
     } else {
         return back()->with('error', 'Failed to generate OTP. Please try again.');
     }

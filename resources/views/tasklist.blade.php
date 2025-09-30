@@ -20,7 +20,7 @@
                 <form action="{{ route('tasklist') }}" method="GET">
                     <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
                         <option value="">All Status</option>
-                        <option value="Todo" {{ request('status') == 'Todo' ? 'selected' : '' }}>To Do</option>
+                        <option value="To do" {{ request('status') == 'To do' ? 'selected' : '' }}>To Do</option>
                         <option value="In progress" {{ request('status') == 'In progress' ? 'selected' : '' }}>In Progress
                         </option>
                         <option value="Completed" {{ request('status') == 'Completed' ? 'selected' : '' }}>Completed
@@ -49,7 +49,7 @@
 
                     <div class="d-flex gap-4 text-muted small mt-2">
                         <span><i class="fa fa-folder-open text-warning"></i>
-                            {{ $task->project->name }}-{{ $task->project->id }} </span>
+                            {{ strtoupper(collect(explode(' ', $task->project->name))->take(4)->map(fn($word) => substr($word, 0, 1))->implode('')) }} - {{ $task->project->id }}</span>
                         <span><i class="fa fa-user text-primary"></i> {{ $task->assignedTo->name }}</span>
                         <span><i class="fa fa-calendar text-danger"></i> Due: {{ $task->due_date }}</span>
                     </div>
@@ -79,16 +79,16 @@
                                 @csrf
                                 @method('PATCH')
                                 <select name="status" class="form-select form-select-sm" onchange="this.form.submit()">
-                                    <option value="Todo" {{ $task->status == 'Todo' ? 'selected' : '' }}
+                                    <option value="To do" {{ $task->status == 'To do' ? 'selected' : '' }}
                                         @if (Auth::user()->role->role == 'Tester') disabled @endif>To Do</option>
                                     <option value="In progress" {{ $task->status == 'In progress' ? 'selected' : '' }}
-                                        @if (Auth::user()->role->role == 'Tester') disabled @endif>In Progress</option>
+                                        @if (in_array(Auth::user()->role->role, ['Admin', 'Tester'])) disabled @endif>In Progress</option>
                                     <option value="QA Tester" {{ $task->status == 'QA Tester' ? 'selected' : '' }}
-                                        @if (Auth::user()->role->role == 'Tester') disabled @endif>QA Tester</option>
+                                         @if (in_array(Auth::user()->role->role, ['Admin', 'Tester'])) disabled @endif>QA Tester</option>
                                     <option value="Completed" {{ $task->status == 'Completed' ? 'selected' : '' }}
-                                        @if (Auth::user()->role->role == 'Backened Developer') disabled @endif>Completed</option>
+                                        @if (in_array(Auth::user()->role->role, ['Admin', 'Developer'])) disabled @endif>Completed</option>
                                     <option value="Reopened" {{ $task->status == 'Reopened' ? 'selected' : '' }}
-                                        @if (Auth::user()->role->role == 'Backened Developer') disabled @endif>Reopened</option>
+                                        @if(in_array(Auth::user()->role->role, ['Admin', 'Developer'])) disabled @endif>Reopened</option>
                                 </select>
                             </form>
                         </div>
