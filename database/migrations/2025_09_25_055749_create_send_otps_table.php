@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRolePermissionsTable extends Migration
+class CreateSendOtpsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,8 +13,11 @@ class CreateRolePermissionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_permissions', function (Blueprint $table) {
+        Schema::create('send_otps', function (Blueprint $table) {
             $table->id();
+            $table->string('email');
+            $table->string('otp');
+            $table->timestamp('expires_at');
             $table->timestamps();
         });
     }
@@ -26,6 +29,6 @@ class CreateRolePermissionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_permissions');
+        Schema::dropIfExists('send_otps');
     }
 }

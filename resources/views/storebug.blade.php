@@ -107,10 +107,13 @@
 
                 <div class="mb-3">
     <label for="image" class="form-label">Bug Image</label>
-    <input type="file" name="image" class="form-control">
+    <input type="file" name="image" class="form-control @error('image') is-invalid @enderror">
     @if(isset($bug) && $bug->image)
         <img src="{{ asset($bug->image) }}" alt="Bug Image" class="mt-2" width="120">
     @endif
+     @error('image')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
 </div>
 
 
@@ -125,7 +128,6 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $('#task_id').on('change', function () {
         var taskId = $(this).val();

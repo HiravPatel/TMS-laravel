@@ -31,7 +31,7 @@
                                 </option>
                             </select>
                         </form>
-                        @if (Auth::user()->role->role !== 'Backened Developer')
+                        @if (Auth::user()->role->role !== 'Developer')
                             <a href="{{ route('storebug') }}" class="btn btn-primary">
                                 <i class="fa fa-plus" aria-hidden="true"></i> Add bug
                             </a>
@@ -108,13 +108,13 @@
                                                     @if (Auth::user()->role->role == 'Tester') disabled @endif>QA Tester</option>
                                                 <option value="Completed"
                                                     {{ $bug->status == 'Completed' ? 'selected' : '' }}
-                                                    @if (Auth::user()->role->role == 'Backened Developer') disabled @endif>
+                                                    @if (Auth::user()->role->role == 'Developer') disabled @endif>
                                                     Completed
                                                 </option>
                                                 <option value="Reopened" {{ $bug->status == 'Reopened' ? 'selected' : '' }}
-    @if (Auth::user()->role->role != 'Tester') disabled @endif>
-    Reopened
-</option>
+                                                    @if (Auth::user()->role->role != 'Tester') disabled @endif>
+                                                    Reopened
+                                                </option>
 
                                             </select>
                                         </form>

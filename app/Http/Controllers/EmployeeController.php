@@ -4,6 +4,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Role;
 use App\Models\User;
+use App\Rules\email;
+use App\Rules\contact;
+use App\Rules\OnlyAlpha;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -93,10 +96,10 @@ class EmployeeController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
-            'name'    => 'required|string|max:50',
-            'email'   => 'required|email|unique:users,email,' . $id,
-            'cno'     => 'nullable|digits:10',
-            'role_id' => 'required|exists:roles,id',
+            'name'     => ['required', new OnlyAlpha],
+            'email'    => ['required','email','unique:users',new email],
+            'cno'      => ['required', new contact],
+            'role_id'  => 'required|exists:roles,id',
         ]);
 
         $user = User::find($id);

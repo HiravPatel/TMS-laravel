@@ -20,23 +20,7 @@ $query = Bug::with(['task', 'user']);
 
 if ($userRole !== 'Tester') {
     $query->where(function ($q) use ($userId) {
-        // Bug directly assigned to this user
         $q->where('user_id', $userId);
-
-        //   OR bug belongs to a task assigned to this user
-        //   ->orWhereHas('task', function ($q2) use ($userId) {
-        //       $q2->where('assigned_to', $userId);
-        //   })
-
-        //   OR bug belongs to a task inside a project where user is leader
-        //   ->orWhereHas('task.project', function ($q3) use ($userId) {
-        //       $q3->where('leader_id', $userId);
-        //   })
-
-        //    OR bug belongs to a task inside a project where user is a member
-        //   ->orWhereHas('task.project.members', function ($q4) use ($userId) {
-        //       $q4->where('users.id', $userId);
-        //   });
     });
 }
 
@@ -59,7 +43,7 @@ if ($request->filled('search')) {
         });
     }
 
-$bugs = $query->orderBy('id', 'desc')->paginate(5);
+            $bugs = $query->orderBy('id', 'desc')->paginate(5);
 
 
 
@@ -82,8 +66,14 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
             'user_id'  => 'required|exists:users,id',
             'priority' => 'required|string',
             'status'   => 'required|string',
-            'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
+            'image' => ['required', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+            ], [
+            'image.required' => 'Please upload an image.',
+            'image.image'    => 'The file must be an image.',
+            'image.mimes'    => 'Only jpeg, jpg, and png images are allowed.',
+            'image.max'      => 'The image size must not exceed 2MB.',
+            ]);
+
 
         $data = $request->all();
 
@@ -135,8 +125,13 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
             'user_id'  => 'required|exists:users,id',
             'priority' => 'required|in:High,Medium,Low',
             'status'   => 'required|in:Todo,In Progress,QA Tester,Completed,Reopened',
-            'image'    => 'nullable|image|mimes:jpg,jpeg,png,gif|max:2048',
-        ]);
+            'image' => ['required', 'image', 'mimes:jpeg,jpg,png', 'max:2048'],
+            ], [
+            'image.required' => 'Please upload an image.',
+            'image.image'    => 'The file must be an image.',
+            'image.mimes'    => 'Only jpeg, jpg, and png images are allowed.',
+            'image.max'      => 'The image size must not exceed 2MB.',
+            ]);
 
         $bug = Bug::find($id);
 
@@ -193,7 +188,6 @@ $bugs = $query->orderBy('id', 'desc')->paginate(5);
     $bug->status = $request->status;
     $bug->save();
 
-    // If Tester reopens → send them to edit page to add details
     if ($request->status === 'Reopened' && Auth::user()->role->role == 'Tester') {
         return redirect()->route('editbug', $bug->id)
             ->with('success', 'Bug reopened. Please update details.');

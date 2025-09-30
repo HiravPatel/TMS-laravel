@@ -11,7 +11,7 @@ class Send_otp extends Model
 
     public $timestamps="true";
 
-    protected $table="send_otp";
+    protected $table="send_otps";
 
     protected $guarded=[];
 }

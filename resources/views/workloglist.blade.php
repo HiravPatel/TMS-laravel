@@ -50,7 +50,7 @@
                             <tr>
                                 <td>
                                     <span class="badge bg-warning-subtle text-dark px-3 py-2">
-                                        {{ $log->project->name }} - {{ $log->project->id }}
+                                        {{ strtoupper(collect(explode(' ', $log->project->name))->take(4)->map(fn($word) => substr($word, 0, 1))->implode('')) }} - {{ $log->project->id }}
                                     </span>
                                 </td>
                                 <td>{{ $log->user->name }}</td>

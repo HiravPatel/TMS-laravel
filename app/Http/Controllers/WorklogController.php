@@ -48,12 +48,11 @@ public function index(Request $request)
         $user = auth()->user();
 
         $projects = Project::whereHas('members', function ($q) use ($user) {
-    $q->where('member_id', $user->id);  
-})->get();
+         $q->where('member_id', $user->id);  
+        })->get();
 
         return view('storeworklog', compact('projects'));
     }
-
 
 
     public function store(Request $request)
@@ -71,7 +70,7 @@ public function index(Request $request)
         'user_id' => Auth::id(),
     ]);
 
-    return redirect()->route('storeworklog')->with('success', 'Work added successfully!');
+    return redirect()->route('workloglist')->with('success', 'Work added successfully!');
 }
 public function getDates($id)
 {

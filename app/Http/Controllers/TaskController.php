@@ -20,18 +20,8 @@ class TaskController extends Controller
 
     if (!in_array($userRole, ['Admin','Tester'])) {
     $query->where(function ($q) use ($userId) {
-        // Task is directly assigned to the user
         $q->where('assigned_to', $userId);
 
-          // Task belongs to a project where user is leader
-        //   ->orWhereHas('project', function ($q2) use ($userId) {
-        //       $q2->where('leader_id', $userId);
-        //   })
-
-          // Task belongs to a project where user is a member
-        //   ->orWhereHas('project.members', function ($q3) use ($userId) {
-        //       $q3->where('users.id', $userId);
-        //   });
     });
     }
 
